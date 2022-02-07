@@ -1,4 +1,4 @@
-import React from 'react';
+import React {useState, useEffect} from 'react';
 import {
     Anchor,
     Button,
@@ -17,15 +17,24 @@ import {
 import { Home } from 'grommet-icons';
 
 function App() {
-    const [size, setSize] = React.useState('tall');
-    const [ice, setIce] = React.useState('ICE');
-    const [num, setNumber] = React.useState('1');
-    const [name, setName] = React.useState('shonn');
-    const [menu, setMenu] = React.useState('Cafe Latte');
+    const [size, setSize] = useState('tall');
+    const [ice, setIce] = useState('ICE');
+    const [num, setNumber] = useState('1');
+    const [name, setName] = useState('shonn');
+    const [menu, setMenu] = useState('Cafe Latte');
     const handleSubmit = (event) => {
         event.preventDefault();
         alert(`Ordered: ${name}, ${num} ${size} size ${ice} ${menu}`);
     };
+    useEffect(() => {
+        fetch('/api/hello')
+            .then(response => response.text())
+            .then(message => {
+                setMenu(message);
+            });
+    },[])
+
+    출처: https://sundries-in-myidea.tistory.com/71 [얇고 넓은 개발 블로그]
     return (
         <Grommet theme={theme}>
             <Header background="neutral-3">
