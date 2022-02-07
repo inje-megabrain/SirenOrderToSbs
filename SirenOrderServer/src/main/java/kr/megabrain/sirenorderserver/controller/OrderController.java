@@ -2,6 +2,7 @@ package kr.megabrain.sirenorderserver.controller;
 
 import kr.megabrain.sirenorderserver.dto.OrderDto;
 import kr.megabrain.sirenorderserver.entity.Item;
+import kr.megabrain.sirenorderserver.entity.Order;
 import kr.megabrain.sirenorderserver.service.ItemService;
 import kr.megabrain.sirenorderserver.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +27,9 @@ import java.util.function.BiConsumer;
 public class OrderController {
 
     private final OrderService orderService;
-    private final ItemService itemService;
-
 
     @PostMapping("/order")
-    public ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto) {
+    public @ResponseBody ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto) {
 
         Long orderId;
         try {
@@ -40,13 +39,5 @@ public class OrderController {
         }
 
         return new ResponseEntity<Long>(orderId, HttpStatus.OK);
-    }
-
-    @GetMapping("/order")
-    public ResponseEntity getAllItem() {
-
-        List<Item> items = itemService.allItem();
-
-        return new ResponseEntity(items, HttpStatus.OK);
     }
 }
