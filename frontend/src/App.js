@@ -34,7 +34,6 @@ function App() {
             });
     },[])
 
-    출처: https://sundries-in-myidea.tistory.com/71 [얇고 넓은 개발 블로그]
     return (
         <Grommet theme={theme}>
             <Header background="neutral-3">
