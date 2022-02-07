@@ -24,7 +24,7 @@ function App() {
     const [name, setName] = useState('shonn');
     const [menu, setMenu] = useState('Cafe Latte');
     const [orderNumber, setorderNumber] = useState('');
-    const URL = "http://shonn.megabrain.kr:9998";
+    const URL = "localhost:3000";
 
     axios.get(URL + '/item')
         .then(function (response) {
