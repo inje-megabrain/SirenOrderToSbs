@@ -1,6 +1,7 @@
 package kr.megabrain.sirenorderserver.controller;
 
 import kr.megabrain.sirenorderserver.dto.OrderDto;
+import kr.megabrain.sirenorderserver.dto.OrderHistoryDto;
 import kr.megabrain.sirenorderserver.entity.Item;
 import kr.megabrain.sirenorderserver.entity.Order;
 import kr.megabrain.sirenorderserver.service.ItemService;
@@ -45,6 +46,7 @@ public class OrderController {
     @GetMapping("/order")
     public @ResponseBody
     ResponseEntity getAllOrders() {
-        orderService.allOrder();
+        List<OrderHistoryDto> orderHistoryDtos = orderService.allOrder();
+        return new ResponseEntity(orderHistoryDtos, HttpStatus.OK);
     }
 }

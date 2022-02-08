@@ -1,5 +1,6 @@
 package kr.megabrain.sirenorderserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import kr.megabrain.sirenorderserver.constant.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL
             , orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems = new ArrayList<>();
