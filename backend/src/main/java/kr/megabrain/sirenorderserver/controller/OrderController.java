@@ -29,7 +29,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/order")
-    public @ResponseBody ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto) {
+    public @ResponseBody
+    ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto) {
 
         Long orderId;
         try {
@@ -39,5 +40,11 @@ public class OrderController {
         }
 
         return new ResponseEntity<Long>(orderId, HttpStatus.OK);
+    }
+
+    @GetMapping("/order")
+    public @ResponseBody
+    ResponseEntity getAllOrders() {
+        orderService.allOrder();
     }
 }
