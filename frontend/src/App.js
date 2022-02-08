@@ -28,8 +28,8 @@ function App() {
     // server Check
     function checkServerStatus() {
         axios.get('/ping')
-        .then((response) => console.log( "Server is survival" + response.data + "!"))
-        .catch((error) => console.log("Server is dead" + error));
+        .then((response) => console.log( response.data + "!" + " Server is survival"))
+        .catch((error) => console.log("Server is dead " + error));
     }
     checkServerStatus();
 
