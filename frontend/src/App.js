@@ -24,20 +24,25 @@ function App() {
     const [name, setName] = useState('shonn');
     const [menu, setMenu] = useState('Cafe Latte');
     const [orderNumber, setorderNumber] = useState('');
-    const URL = "http://localhost:3000";
+    const URL = "";
 
-    axios.get(URL + '/item')
-        .then(function (response) {
-            // 성공했을 때
-            console.log(response);
-        })
-        .catch(function (error) {
-            // 에러가 났을 때
-            console.log(error);
-        })
-        .finally(function () {
-            // 항상 실행되는 함수
-        });
+    getMenus();
+
+    function getMenus() {
+        axios.get(URL + '/item')
+            .then(function (response) {
+                // 성공했을 때
+                console.log("connection success!" + response.data);
+
+            })
+            .catch(function (error) {
+                // 에러가 났을 때
+                console.log(error);
+            })
+            .finally(function () {
+                // 항상 실행되는 함수
+            });
+    }
 
     function sendPost() {
         axios.post(URL + '/order', {
