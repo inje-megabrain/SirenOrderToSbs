@@ -1,4 +1,4 @@
-import React {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     Anchor,
     Button,
@@ -15,6 +15,7 @@ import {
     RadioButtonGroup, Select, TextArea
 } from 'grommet';
 import { Home } from 'grommet-icons';
+import axios from 'axios';
 
 function App() {
     const [size, setSize] = useState('tall');
@@ -22,17 +23,43 @@ function App() {
     const [num, setNumber] = useState('1');
     const [name, setName] = useState('shonn');
     const [menu, setMenu] = useState('Cafe Latte');
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        alert(`Ordered: ${name}, ${num} ${size} size ${ice} ${menu}`);
-    };
-    useEffect(() => {
-        fetch('/api/hello')
-            .then(response => response.text())
-            .then(message => {
-                setMenu(message);
+    const [orderNumber, setorderNumber] = useState('');
+
+    // server Check
+    function checkServerStatus() {
+        axios.get('/ping')
+        .then((response) => console.log( response.data + "!" + " Server is survival"))
+        .catch((error) => console.log("Server is dead " + error));
+    }
+    checkServerStatus();
+
+    function getMenus() {
+        axios.get('/item')
+            .then(function (response) {
+                // 성공했을 때
+                console.log("connection success!" + response.data);
+
+            })
+            .catch(function (error) {
+                // 에러가 났을 때
+                console.log(error);
+            })
+            .finally(function () {
+                // 항상 실행되는 함수
             });
-    },[])
+    }
+
+    function sendPost() {
+        axios.post('/order', {
+            itemId: '2',
+            count: num
+        })
+            .then(function (response) {
+                console.log(response)
+            }).catch(function (error) {
+                console.log(error)
+        })
+    }
 
     return (
         <Grommet theme={theme}>
@@ -45,7 +72,7 @@ function App() {
                 <Paragraph>SbsBucks</Paragraph>
                 <Form
                     onChange={({ value }) => {console.log("Submit: ", value)}}
-                    onSubmit={handleSubmit}
+                    onSubmit={ sendPost }
                 >
                         <Box
                             direction="row"
