@@ -24,21 +24,30 @@ function App() {
     const [name, setName] = useState('shonn');
     const [menu, setMenu] = useState('Cafe Latte');
     const [orderNumber, setorderNumber] = useState('');
-    axios.get('/ping')
-        .then((response) => console.log(response));
-    
-    axios.get('/item')
-        .then(function (response) {
-            // 성공했을 때
-            console.log("Init"+response);
-        })
-        .catch(function (error) {
-            // 에러가 났을 때
-            console.log(error);
-        })
-        .finally(function () {
-            // 항상 실행되는 함수
-        });
+
+    // server Check
+    function checkServerStatus() {
+        axios.get('/ping')
+        .then((response) => console.log( "Server is survival" + response.data + "!"))
+        .catch((error) => console.log("Server is dead" + error));
+    }
+    checkServerStatus();
+
+    function getMenus() {
+        axios.get('/item')
+            .then(function (response) {
+                // 성공했을 때
+                console.log("connection success!" + response.data);
+
+            })
+            .catch(function (error) {
+                // 에러가 났을 때
+                console.log(error);
+            })
+            .finally(function () {
+                // 항상 실행되는 함수
+            });
+    }
 
     function sendPost() {
         axios.post('/order', {
