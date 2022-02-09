@@ -1,6 +1,7 @@
 package kr.megabrain.sirenorderserver.controller;
 
 import kr.megabrain.sirenorderserver.dto.OrderDto;
+import kr.megabrain.sirenorderserver.dto.OrderHistoryDto;
 import kr.megabrain.sirenorderserver.entity.Item;
 import kr.megabrain.sirenorderserver.entity.Order;
 import kr.megabrain.sirenorderserver.service.ItemService;
@@ -29,7 +30,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/order")
-    public @ResponseBody ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto) {
+    public @ResponseBody
+    ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto) {
 
         Long orderId;
         try {
@@ -39,5 +41,12 @@ public class OrderController {
         }
 
         return new ResponseEntity<Long>(orderId, HttpStatus.OK);
+    }
+
+    @GetMapping("/order")
+    public @ResponseBody
+    ResponseEntity getAllOrders() {
+        List<OrderHistoryDto> orderHistoryDtos = orderService.allOrder();
+        return new ResponseEntity(orderHistoryDtos, HttpStatus.OK);
     }
 }

@@ -1,6 +1,8 @@
 package kr.megabrain.sirenorderserver.service;
 
 import kr.megabrain.sirenorderserver.dto.OrderDto;
+import kr.megabrain.sirenorderserver.dto.OrderHistoryDto;
+import kr.megabrain.sirenorderserver.dto.OrderItemDto;
 import kr.megabrain.sirenorderserver.entity.Item;
 import kr.megabrain.sirenorderserver.entity.Order;
 import kr.megabrain.sirenorderserver.entity.OrderItem;
@@ -36,9 +38,23 @@ public class OrderService {
         return order.getId();
     }
 
-    public List<Order> allOrder(){
+    @Transactional(readOnly = true)
+    public List<OrderHistoryDto> allOrder() {
+        List<Order> orders = orderRepository.findOrders();
+        List<OrderHistoryDto> orderHistoryDtos = new ArrayList<>();
 
-        return orderRepository.findAll();
+        for (Order order : orders) {
+            OrderHistoryDto orderHistoryDto = OrderHistoryDto.of(order);
+
+            List<OrderItem> orderItems = order.getOrderItems();
+            for (OrderItem orderItem : orderItems) {
+                OrderItemDto orderItemDto = OrderItemDto.of(orderItem);
+                orderHistoryDto.addOrderItemDto(orderItemDto);
+            }
+            orderHistoryDtos.add(orderHistoryDto);
+        }
+
+        return orderHistoryDtos;
     }
 
 }

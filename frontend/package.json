@@ -28,7 +28,7 @@
       "react-app/jest"
     ]
   },
-  "proxy": "http://localhost:8080",
+  "proxy": "http://shonn.megabrain.kr:9998/",
   "browserslist": {
     "production": [
       ">0.2%",

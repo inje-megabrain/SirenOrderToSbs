@@ -28,7 +28,7 @@ class App extends React.Component {
 
     getMenus = async () => {
 
-        await axios.get('http://shonn.megabrain.kr:9998/item')
+        await axios.get('/item')
             .then(({ data }) => {
                 this.setState({
                     loading: true,
