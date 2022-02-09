@@ -22,13 +22,24 @@ import React from 'react';
 
 class App extends React.Component {
 
+    // 주문 폼에 대한 객체
+    orderForm = {
+        size: 'tall',
+        ice : 'ICE',
+        num : 1,
+        name : 'shonn',
+        menuId : 1,
+        menuName : ''
+    };
+
     state = {
         isLoading: true,
         menus: menusTemplate,
+        menuName : this.orderForm.menuName
     };
 
-    getMenus = async () => {
 
+    getMenus = async () => {
         await axios.get('/item')
             .then(({ data }) => {
                 this.setState({
@@ -49,6 +60,27 @@ class App extends React.Component {
         this.setState({isLoading: false});
     };
 
+    newOrder = async () => {
+        await axios.post('/order', {
+            itemId:1,
+            count:4 
+        })
+        .then((response) => {
+            alert("주문번호 : " + response.data + "번 주문 성공");
+            console.log(response);
+        })
+        .catch((error) => console.log(error))
+    };
+
+    handleChangeItemName = (e) => {
+        console.log(e.value);
+        this.orderForm.menuName = e.value;
+        this.setState({
+            menuName: this.orderForm.menuName
+        })
+        console.log(this.orderForm);
+    };
+
     componentDidMount() {
         // setTimeout(() => {
         //     this.setState({isLoading:false});
@@ -57,13 +89,7 @@ class App extends React.Component {
     }
 
     render() {
-        const {isLoading, menus} = this.state;
-        this.state = {
-            size: 'tall',
-            ice : 'ICE',
-            num : 1,
-            name : 'shonn',
-            menu : 1 };
+        const {isLoading, menus, menuName} = this.state;
 
         return (
         <Grommet theme={theme}>
@@ -94,12 +120,13 @@ class App extends React.Component {
                                 ):(
                                     <Select
                                         className="menus"
-                                        value={ this.state.menu }
-                                        onChange={({ option}) => this.setState({ menu: option} )}
+                                        value={this.state.menuName}
+                                        //placeholder=""
+                                        onChange={this.handleChangeItemName}
                                         options={
                                              menus && menus.map((menu)=>(
-                                                menu.id
-                                            ))}
+                                                menu.itemName
+                                        ))}
                                     />
                                 )}
                             </section>
@@ -131,7 +158,7 @@ class App extends React.Component {
                     </Box>
                     <br/>
                     <Box direction="row" gap="medium">
-                        <Button type="submit" primary label="Submit"/>
+                        <Button type="submit" onClick={this.newOrder} primary label="Submit"/>
                     </Box>
                 </Form>
             </Main>
