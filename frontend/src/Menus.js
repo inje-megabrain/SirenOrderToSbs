@@ -1,22 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Box, Paragraph} from "grommet";
 
-function Menus({key, id, itemName, price, stockNumber}){
-    return <Box
-        direction="row"
-        border={{color: 'brand', size: 'small'}}
-        pad="medium"
-        >
-        <Box pad="medium">
-            <Paragraph margin="none">
-                {itemName}, <br />
-                ${price},
-                {stockNumber}
-            </Paragraph>
-        </Box>
-    </Box>;
+function Menus({id, itemName, price, stockNumber}){
+    return <option key = {id} value = {id}> {itemName} </option>
 }
+
 Menus.propTypes ={
     id:PropTypes.number.isRequired,
     itemName:PropTypes.string.isRequired,

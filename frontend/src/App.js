@@ -1,4 +1,3 @@
-import React, {useState, useEffect} from 'react';
 import {
     Anchor,
     Button,
@@ -12,12 +11,14 @@ import {
     Text,
     Form,
     Box,
-    RadioButtonGroup, Select, TextArea
+    TextArea,
+    Select
 } from 'grommet';
 import { Home } from 'grommet-icons';
 import axios from 'axios';
 import Menus from './Menus';
 import menusTemplate from './menuDefault';
+import React from 'react';
 
 class App extends React.Component {
 
@@ -49,7 +50,6 @@ class App extends React.Component {
     };
 
     componentDidMount() {
-        //여기서 영화 데이터 로딩!
         // setTimeout(() => {
         //     this.setState({isLoading:false});
         // },6000);
@@ -61,9 +61,9 @@ class App extends React.Component {
         this.state = {
             size: 'tall',
             ice : 'ICE',
-            num : '1',
+            num : 1,
             name : 'shonn',
-            menu : 'Espresso' };
+            menu : 1 };
 
         return (
         <Grommet theme={theme}>
@@ -92,18 +92,15 @@ class App extends React.Component {
                                         <span className="loader__text">Loading...</span>
                                     </div>
                                 ):(
-                                    <div className="menus">
-                                        {
-                                            menus && menus.map((menu)=>(
-                                            <Menus
-                                                key={menu.id}
-                                                id={menu.id}
-                                                itemName={menu.itemName}
-                                                price={menu.price}
-                                                stockNumber={menu.stockNumber}/>
-                                            ))
-                                        }
-                                    </div>
+                                    <Select
+                                        className="menus"
+                                        value={ this.state.menu }
+                                        onChange={({ option}) => this.setState({ menu: option} )}
+                                        options={
+                                             menus && menus.map((menu)=>(
+                                                menu.id
+                                            ))}
+                                    />
                                 )}
                             </section>
                         </Box>
@@ -127,7 +124,7 @@ class App extends React.Component {
                             <Paragraph>Number</Paragraph>
                             <TextArea
                                 placeholder="type here"
-                                value={this.num}
+                                value={ this.num }
                                 onChange={({option}) => this.setState({ ice: option} )}
                             />
                         </Box>
