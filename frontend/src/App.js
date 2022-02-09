@@ -16,110 +16,135 @@ import {
 } from 'grommet';
 import { Home } from 'grommet-icons';
 import axios from 'axios';
+import Menus from './Menus';
+import menusTemplate from './menuDefault';
 
-function App() {
-    const [size, setSize] = useState('tall');
-    const [ice, setIce] = useState('ICE');
-    const [num, setNumber] = useState('1');
-    const [name, setName] = useState('shonn');
-    const [menu, setMenu] = useState('Cafe Latte');
-    const [orderNumber, setorderNumber] = useState('');
-    const URL = "";
+class App extends React.Component {
 
-    getMenus();
+    state = {
+        isLoading: true,
+        menus: menusTemplate,
+    };
 
-    function getMenus() {
-        axios.get(URL + '/item')
-            .then(function (response) {
-                // 성공했을 때
-                console.log("connection success!" + response.data);
+    getMenus = async () => {
 
+        await axios.get('http://shonn.megabrain.kr:9998/item')
+            .then(({ data }) => {
+                this.setState({
+                    loading: true,
+                    menus: data
+                });
+                console.log(data.id);
             })
-            .catch(function (error) {
-                // 에러가 났을 때
-                console.log(error);
+            .catch(e => {  // API 호출이 실패한 경우
+                console.error(e);  // 에러표시
+                this.setState({
+                    loading: false
+                });
             })
-            .finally(function () {
-                // 항상 실행되는 함수
+            .finally(e => {
+
             });
+        this.setState({isLoading: false});
+    };
+
+    componentDidMount() {
+        //여기서 영화 데이터 로딩!
+        // setTimeout(() => {
+        //     this.setState({isLoading:false});
+        // },6000);
+        this.getMenus().then(r => console.log(r));
     }
 
-    function sendPost() {
-        axios.post(URL + '/order', {
-            itemId: '2',
-            count: num
-        })
-            .then(function (response) {
-                console.log(response)
-            }).catch(function (error) {
-                console.log(error)
-        })
-    }
+    render() {
+        const {isLoading, menus} = this.state;
+        this.state = {
+            size: 'tall',
+            ice : 'ICE',
+            num : '1',
+            name : 'shonn',
+            menu : 'Espresso' };
 
-    return (
+        return (
         <Grommet theme={theme}>
             <Header background="neutral-3">
-                <Button hoverIndicator icon={<Home />}/>
-                <Menu label="account" items={[{ label: 'user' }, { label: 'admin'}]} />
+                <Button hoverIndicator icon={<Home/>}/>
+                <Menu label="account" items={[{label: 'user'}, {label: 'admin'}]}/>
             </Header>
             <Main pad="large">
                 <Heading>Order Coffee ☕️</Heading>
                 <Paragraph>SbsBucks</Paragraph>
                 <Form
-                    onChange={({ value }) => {console.log("Submit: ", value)}}
-                    onSubmit={ sendPost }
+                    onChange={({value}) => {
+                        console.log("Submit: ", value)
+                    }}
                 >
-                        <Box
-                            direction="row"
-                            border={{ color: 'brand', size: 'small' }}
-                            pad="medium"
-                        >
-                            <Box pad="medium">
-                                <Paragraph>Menu</Paragraph>
-                                <RadioButtonGroup
-                                    name="doc"
-                                    options={['Ice Americano', 'Cafe Latte', 'Cafe Mocha', 'Iced Tea']}
-                                    value={menu}
-                                    onChange={(event) => setMenu(event.target.value)}
-                                />
-                            </Box>
-                            <Box pad="medium">
-                                <Paragraph>ICE or HOT</Paragraph>
+                    <Box
+                        direction="row"
+                        border={{color: 'brand', size: 'small'}}
+                        pad="medium"
+                    >
+                        <Box pad="medium">
+                            <Paragraph>Menu</Paragraph>
+                            <section className="container">
+                                {isLoading?(
+                                    <div className="loader">
+                                        <span className="loader__text">Loading...</span>
+                                    </div>
+                                ):(
+                                    <div className="menus">
+                                        {
+                                            menus && menus.map((menu)=>(
+                                            <Menus
+                                                key={menu.id}
+                                                id={menu.id}
+                                                itemName={menu.itemName}
+                                                price={menu.price}
+                                                stockNumber={menu.stockNumber}/>
+                                            ))
+                                        }
+                                    </div>
+                                )}
+                            </section>
+                        </Box>
+                        <Box pad="medium">
+                            <Paragraph>ICE or HOT</Paragraph>
                             <Select
                                 options={['ICE', 'HOT']}
-                                value={ice}
-                                onChange={({ option }) => setIce(option)}
+                                value={this.ice}
+                                onChange={({option}) => this.setState({ ice: option} )}
                             />
-                            </Box>
-                            <Box pad="medium">
-                                <Paragraph>Size</Paragraph>
-                                <Select
-                                    options={['tall', 'grande', 'venti']}
-                                    value={size}
-                                    onChange={({ option }) => setSize(option)}
-                                />
-                            </Box>
-                            <Box pad="medium">
-                                <Paragraph>Number</Paragraph>
-                                <TextArea
-                                    placeholder="type here"
-                                    value={num}
-                                    onChange={event => setNumber(event.target.value)}
-                                />
-                            </Box>
                         </Box>
-                    <br />
+                        <Box pad="medium">
+                            <Paragraph>Size</Paragraph>
+                            <Select
+                                options={['tall', 'grande', 'venti']}
+                                value={this.size}
+                                onChange={({option}) => this.setState({ size: option} )}
+                            />
+                        </Box>
+                        <Box pad="medium">
+                            <Paragraph>Number</Paragraph>
+                            <TextArea
+                                placeholder="type here"
+                                value={this.num}
+                                onChange={({option}) => this.setState({ ice: option} )}
+                            />
+                        </Box>
+                    </Box>
+                    <br/>
                     <Box direction="row" gap="medium">
-                        <Button type="submit" primary label="Submit" />
+                        <Button type="submit" primary label="Submit"/>
                     </Box>
                 </Form>
             </Main>
             <Footer background="neutral-3" pad="medium">
                 <Text>Copyright</Text>
-                <Anchor label="About" />
+                <Anchor label="About"/>
             </Footer>
         </Grommet>
-    );
+        )
+    };
 }
 
 export default App;
