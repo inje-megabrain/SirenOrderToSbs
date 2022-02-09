@@ -35,7 +35,8 @@ class App extends React.Component {
     state = {
         isLoading: true,
         menus: menusTemplate,
-        menuName : this.orderForm.menuName
+        menuName : this.orderForm.menuName,
+        count : this.orderForm.count,
     };
 
 
@@ -78,6 +79,15 @@ class App extends React.Component {
         }
     };
 
+    handleChangeItemCount = (e) => {
+        console.log(e.target.value);
+        this.orderForm.count = e.target.value;
+
+        this.setState({
+            count: this.orderForm.count
+        });
+        console.log(this.orderForm);
+    }
     handleChangeItemName = (e) => {
         console.log(e.value);
 
@@ -159,11 +169,12 @@ class App extends React.Component {
                             />
                         </Box>
                         <Box pad="medium">
-                            <Paragraph>Number</Paragraph>
-                            <TextArea
+                            <Paragraph>Count</Paragraph>
+                            <input
+                                type="number"
                                 placeholder="type here"
-                                value={ this.num }
-                                onChange={({option}) => this.setState({ ice: option} )}
+                                value={ this.state.count }
+                                onChange={this.handleChangeItemCount}
                             />
                         </Box>
                     </Box>
