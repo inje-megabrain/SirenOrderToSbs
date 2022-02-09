@@ -26,7 +26,7 @@ class App extends React.Component {
     orderForm = {
         size: 'tall',
         ice : 'ICE',
-        num : 1,
+        count : 1,
         name : 'shonn',
         menuId : 1,
         menuName : ''
@@ -62,8 +62,8 @@ class App extends React.Component {
 
     newOrder = async () => {
         await axios.post('/order', {
-            itemId:1,
-            count:4 
+            itemId:this.orderForm.menuId,
+            count:this.orderForm.count 
         })
         .then((response) => {
             alert("주문번호 : " + response.data + "번 주문 성공");
@@ -72,13 +72,24 @@ class App extends React.Component {
         .catch((error) => console.log(error))
     };
 
+    getItemIdBySelectedItem = (e) => {
+        if(e.itemName === this.orderForm.menuName){
+            return true;
+        }
+    };
+
     handleChangeItemName = (e) => {
         console.log(e.value);
+
+        // 상품명, 상품ID 할당
         this.orderForm.menuName = e.value;
+        this.orderForm.menuId = this.state.menus.filter(this.getItemIdBySelectedItem).at(0).id;
+        
         this.setState({
             menuName: this.orderForm.menuName
         })
         console.log(this.orderForm);
+        //console.log(this.state.menus.filter(this.getItemIdBySelectedItem));
     };
 
     componentDidMount() {
