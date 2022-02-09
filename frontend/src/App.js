@@ -88,6 +88,7 @@ class App extends React.Component {
         });
         console.log(this.orderForm);
     }
+    
     handleChangeItemName = (e) => {
         console.log(e.value);
 
