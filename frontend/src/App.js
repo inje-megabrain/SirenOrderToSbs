@@ -11,12 +11,11 @@ import {
     Text,
     Form,
     Box,
-    TextArea,
+    TextInput,
     Select
 } from 'grommet';
 import { Home } from 'grommet-icons';
 import axios from 'axios';
-import Menus from './Menus';
 import menusTemplate from './menuDefault';
 import React from 'react';
 
@@ -35,8 +34,10 @@ class App extends React.Component {
     state = {
         isLoading: true,
         menus: menusTemplate,
-        menuName : this.orderForm.menuName,
-        count : this.orderForm.count,
+        ice : 'ICE',
+        size: 'tall',
+        menuName : 'espresso',
+        count : 1,
     };
 
 
@@ -110,8 +111,7 @@ class App extends React.Component {
     }
 
     render() {
-        const {isLoading, menus, menuName} = this.state;
-
+        const {isLoading, menus} = this.state;
         return (
         <Grommet theme={theme}>
             <Header background="neutral-3">
@@ -156,7 +156,7 @@ class App extends React.Component {
                             <Paragraph>ICE or HOT</Paragraph>
                             <Select
                                 options={['ICE', 'HOT']}
-                                value={this.ice}
+                                value={this.state.ice}
                                 onChange={({option}) => this.setState({ ice: option} )}
                             />
                         </Box>
@@ -164,13 +164,13 @@ class App extends React.Component {
                             <Paragraph>Size</Paragraph>
                             <Select
                                 options={['tall', 'grande', 'venti']}
-                                value={this.size}
+                                value={this.state.size}
                                 onChange={({option}) => this.setState({ size: option} )}
                             />
                         </Box>
                         <Box pad="medium">
                             <Paragraph>Count</Paragraph>
-                            <input
+                            <TextInput
                                 type="number"
                                 placeholder="type here"
                                 value={ this.state.count }
