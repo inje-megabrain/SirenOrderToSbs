@@ -1,4 +1,4 @@
-import {Button, Card, CardBody, CardFooter, CardHeader, Heading} from "grommet";
+import {Button, Card, CardBody, CardFooter, CardHeader, Heading, Grid} from "grommet";
 import {Checkmark, Close} from "grommet-icons";
 import React from "react";
 import axios from "axios";
@@ -44,7 +44,7 @@ class Receipt extends React.Component {
         return (
             <>
             <Heading>Receipt 🧾</Heading>
-            <Paragraph>{
+            <Grid columns="small" gap="small">{
                 receipts && receipts.map((receipt)=>(
                     <>
                     <Card
@@ -55,9 +55,12 @@ class Receipt extends React.Component {
                     >
                         <CardHeader pad="small">Order number : <h1>{receipt.orderId }</h1></CardHeader>
                         <CardBody height="small" pad="small">
-                            timestamp : { receipt.orderDate} <br /> order : {
+                            timestamp : { receipt.orderDate} <br />order : {
                              receipt.orderItemDtos.map((order) => (
-                                 order.count + ' ' + order.itemName + ', total $' + (order.orderPrice * order.count)
+                                 <h2>
+                                     {order.count} {order.itemName}<br /><br />
+                                     ${order.orderPrice * order.count}
+                                 </h2>
                         )) }</CardBody>
                         <CardFooter background="light-1">
                             <Button
@@ -70,11 +73,9 @@ class Receipt extends React.Component {
                             />
                         </CardFooter>
                     </Card>
-                    <br />
                     </>
                 ))
-            }
-            </Paragraph>
+            }</Grid>
             </>
         )
     }

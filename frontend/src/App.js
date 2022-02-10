@@ -9,15 +9,16 @@ import {
 import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Order from "./pages/Order";
-import Receipt from './pages/Receipt';
-import {Paypal, Help, Projects} from "grommet-icons";
+import AddMenu from "./pages/AddMenu";
+import Receipt from "./pages/Receipt";
+import {Java, Help, Script, Add} from "grommet-icons";
 
 function App() {
     return (
-        <Grommet>
+        <Grommet full>
             <Box
                 direction="row"
-                border={{ color: 'neutral-3', size: 'large' }}
+                border={{ color: 'neutral-3', size: 'medium' }}
                 pad="xsmall"
             >
                     <Box pad="small" >
@@ -30,17 +31,19 @@ function App() {
                                  }
                         >
                             <Nav gap="small">
-                                <Button href= "/" icon={<Paypal />} hoverIndicator />
-                                <Button href= "/receipt" icon={<Projects />} hoverIndicator />
+                                <Button href= "/" icon={<Java />} hoverIndicator />
+                                <Button href= "/receipt" icon={<Script />} hoverIndicator />
+                                <Button href= "/addmenu" icon={<Add />} hoverIndicator />
                             </Nav>
                         </Sidebar>
                     </Box>
-                    <Box pad="large" >
+                    <Box pad="xlarge" >
                         <Main pad="large">
                             <BrowserRouter>
                                 <Routes>
                                     <Route path="/" caseSensitive={false} element={<Order/>} />
                                     <Route path="/receipt" caseSensitive={false} element={<Receipt/>} />
+                                    <Route path="/addmenu" caseSensitive={false} element={<AddMenu/>} />
                                     <Route path="*" caseSensitive={false} element={<h1>404 Not Found...</h1>}/>
                                 </Routes>
                             </BrowserRouter>
