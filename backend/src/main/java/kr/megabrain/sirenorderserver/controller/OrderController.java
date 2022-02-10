@@ -6,6 +6,7 @@ import kr.megabrain.sirenorderserver.dto.OrderDto;
 import kr.megabrain.sirenorderserver.dto.OrderHistoryDto;
 import kr.megabrain.sirenorderserver.entity.Item;
 import kr.megabrain.sirenorderserver.entity.Order;
+import kr.megabrain.sirenorderserver.exception.OutOfStockException;
 import kr.megabrain.sirenorderserver.service.ItemService;
 import kr.megabrain.sirenorderserver.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +77,8 @@ public class OrderController {
         // 주문 수락
         try {
             orderService.setOrderStatus(orderId, OrderStatus.ACCEPT);
-
+        } catch (OutOfStockException e) {
+            return new ResponseEntity(e.getMessage() , HttpStatus.BAD_REQUEST);
         } catch (IllegalStateException e) {
             return new ResponseEntity("처리된 주문입니다.", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
