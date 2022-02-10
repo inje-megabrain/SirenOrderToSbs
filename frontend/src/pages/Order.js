@@ -20,7 +20,7 @@ class Order extends React.Component {
         menus: menusTemplate,
         ice : 'ICE',
         size: 'tall',
-        menuName : 'espresso',
+        menuName : 'americano',
         count : 1,
     };
 

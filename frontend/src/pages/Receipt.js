@@ -1,4 +1,5 @@
-import {Heading} from "grommet";
+import {Button, Card, CardBody, CardFooter, CardHeader, Heading, Grid} from "grommet";
+import {Checkmark, Close} from "grommet-icons";
 import React from "react";
 import axios from "axios";
 import ReceiptsTemplate from "../support/receiptDefault";
@@ -17,7 +18,7 @@ class Receipt extends React.Component {
                     loading: true,
                     receipts: data
                 });
-                console.log(data.orderId);
+                console.log('loaded data id is ' + data.orderId);
             })
             .catch(e => {  // API 호출이 실패한 경우
                 console.error(e);  // 에러표시
@@ -43,16 +44,38 @@ class Receipt extends React.Component {
         return (
             <>
             <Heading>Receipt 🧾</Heading>
-            <Paragraph>{
+            <Grid columns="small" gap="small">{
                 receipts && receipts.map((receipt)=>(
-                    <Paragraph>id : { receipt.orderId }<br/>
-                        date : { receipt.orderDate }<br />
-                        order : { receipt.orderItemDtos.map((order) => (
-                            order.itemName + ', ' + order.count + ', ' + order.orderPrice
-                        )) }</Paragraph>
-            ))
-            }
-            </Paragraph>
+                    <>
+                    <Card
+                          height="medium"
+                          pad ="small"
+                          width="large"
+                          background="light-1"
+                    >
+                        <CardHeader pad="small">Order number : <h1>{receipt.orderId }</h1></CardHeader>
+                        <CardBody height="small" pad="small">
+                            timestamp : { receipt.orderDate} <br />order : {
+                             receipt.orderItemDtos.map((order) => (
+                                 <h2>
+                                     {order.count} {order.itemName}<br /><br />
+                                     ${order.orderPrice * order.count}
+                                 </h2>
+                        )) }</CardBody>
+                        <CardFooter background="light-1">
+                            <Button
+                                icon={<Close color="red" />}
+                                hoverIndicator
+                            />
+                            <Button
+                                icon={<Checkmark color="green" />}
+                                hoverIndicator
+                            />
+                        </CardFooter>
+                    </Card>
+                    </>
+                ))
+            }</Grid>
             </>
         )
     }
