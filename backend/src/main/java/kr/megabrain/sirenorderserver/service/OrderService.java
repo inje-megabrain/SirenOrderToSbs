@@ -48,6 +48,9 @@ public class OrderService {
         }
 
         order.setOrderStatus(status);
+        if (order.getOrderStatus().equals(OrderStatus.CANCEL)) {
+            order.cancelOrder();
+        }
         orderRepository.save(order);
     }
 

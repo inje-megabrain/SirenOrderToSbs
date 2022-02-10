@@ -36,12 +36,15 @@ public class OrderItem {
         orderItem.setOrderPrice(item.getPrice());
         orderItem.setIce(ice);
         orderItem.setSize(size);
-
         item.removeStock(count);
         return orderItem;
     }
 
     public int getTotalPrice(){
         return orderPrice * count;
+    }
+
+    public void cancel() {
+        this.getItem().addStock(count); // 주문 수량만큼 재고 증가
     }
 }
