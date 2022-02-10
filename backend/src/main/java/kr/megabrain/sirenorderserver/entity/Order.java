@@ -45,4 +45,12 @@ public class Order {
         order.setOrderDate(LocalDateTime.now());
         return order;
     }
+
+    public int getTotalPrice() {
+        int totalPrice = 0;
+        for (OrderItem orderItem : orderItems) {
+            totalPrice += orderItem.getTotalPrice();
+        }
+        return totalPrice;
+    }
 }
