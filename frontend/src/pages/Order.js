@@ -57,8 +57,11 @@ class Order extends React.Component {
                 alert("주문번호 : " + response.data + "번 주문 성공");
                 console.log(response);
             })
-            .catch((error) => console.log(error))
-    };
+            .catch((error) => alert(error.response.data))
+
+    }
+
+    ;
 
     getItemIdBySelectedItem = (e) => {
         if(e.itemName === this.orderForm.menuName){
@@ -141,7 +144,7 @@ class Order extends React.Component {
                             ):(
                                 <Select
                                     className="menus"
-                                    value={this.state.menuName}
+                                    placeholder={this.state.menuName}
                                     //placeholder=""
                                     onChange={this.handleChangeItemName}
                                     options={
@@ -169,10 +172,9 @@ class Order extends React.Component {
                         </Box>
                         <Box pad="medium">
                             <Paragraph>Count</Paragraph>
-                            <TextInput
-                                type="number"
-                                placeholder="type here"
-                                value={ this.state.count }
+                            <Select
+                                options={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
+                                value={this.state.count}
                                 onChange={this.handleChangeItemCount}
                             />
                         </Box>
