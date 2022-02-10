@@ -99,7 +99,6 @@ class Order extends React.Component {
         return (
             <>
                 <Heading>Order Coffee ☕️</Heading>
-                <Paragraph>SbsBucks</Paragraph>
                 <Form
                     onChange={({value}) => {
                         console.log("Submit: ", value)

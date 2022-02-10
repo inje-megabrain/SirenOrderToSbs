@@ -4,13 +4,13 @@ import {
     Grommet,
     Main,
     Text,
-    Box,
+    Box, Avatar, Button, Sidebar, Nav
 } from 'grommet';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Nav from './pages/Nav'
 import Order from "./pages/Order";
 import Receipt from './pages/Receipt';
+import {Paypal, Help, Projects} from "grommet-icons";
 
 function App() {
     return (
@@ -21,7 +21,19 @@ function App() {
                 pad="xsmall"
             >
                     <Box pad="small" >
-                        <Nav />
+                        <Sidebar background="neutral-3" round="small"
+                                 header={
+                                     <Avatar src="//s.gravatar.com/avatar/b7fb138d53ba0f573212ccce38a7c43b?s=80" />
+                                 }
+                                 footer={
+                                     <Button icon={<Help />} hoverIndicator />
+                                 }
+                        >
+                            <Nav gap="small">
+                                <Button href= "/" icon={<Paypal />} hoverIndicator />
+                                <Button href= "/receipt" icon={<Projects />} hoverIndicator />
+                            </Nav>
+                        </Sidebar>
                     </Box>
                     <Box pad="large" >
                         <Main pad="large">
