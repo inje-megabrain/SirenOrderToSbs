@@ -42,6 +42,11 @@ public class OrderService {
     public void setOrderStatus(Long orderId, OrderStatus status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(EntityNotFoundException::new);
+
+        if (!order.getOrderStatus().equals(OrderStatus.ORDER)) {
+            throw new IllegalStateException();
+        }
+
         order.setOrderStatus(status);
         orderRepository.save(order);
     }

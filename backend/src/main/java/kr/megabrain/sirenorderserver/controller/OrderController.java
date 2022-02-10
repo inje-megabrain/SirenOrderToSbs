@@ -76,9 +76,21 @@ public class OrderController {
         // 주문 수락
         try {
             orderService.setOrderStatus(orderId, OrderStatus.ACCEPT);
+
+        } catch (IllegalStateException e) {
+            return new ResponseEntity("처리된 주문입니다.", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity("없는 주문입니다.", HttpStatus.BAD_REQUEST);
         }
+        JSONArray embeds = new JSONArray();
+        JSONObject data = new JSONObject();
+        data.put("title", "\uD83D\uDCE3 [주문 수락 안내 ]");
+        data.put("description", "name" + "님의 소중한 주문이 수락되었습니다. \n\n" +
+                "주문 번호 : " + orderId
+        );
+        embeds.put(data);
+
+        webHookService.send(embeds);
         return new ResponseEntity("수락되었습니다.", HttpStatus.OK);
     }
 
@@ -88,9 +100,21 @@ public class OrderController {
         // 주문 수락
         try {
             orderService.setOrderStatus(orderId, OrderStatus.CANCEL);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity("처리된 주문입니다.", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity("없는 주문입니다.", HttpStatus.BAD_REQUEST);
         }
+        JSONArray embeds = new JSONArray();
+        JSONObject data = new JSONObject();
+        data.put("title", "\uD83D\uDCE3 [주문 취소 안내 ]");
+        data.put("description", "name" + "님의 소중한 주문이 취소되었습니다. \n\n" +
+                "주문 번호 : " + orderId
+        );
+        embeds.put(data);
+
+        webHookService.send(embeds);
+
         return new ResponseEntity("취소되었습니다.", HttpStatus.OK);
     }
 }
