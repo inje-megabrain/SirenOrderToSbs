@@ -1,5 +1,5 @@
 import {Button, Card, CardBody, CardFooter, CardHeader, Heading} from "grommet";
-import {Checkbox} from "grommet-icons";
+import {Checkmark, Close} from "grommet-icons";
 import React from "react";
 import axios from "axios";
 import ReceiptsTemplate from "../support/receiptDefault";
@@ -46,21 +46,33 @@ class Receipt extends React.Component {
             <Heading>Receipt 🧾</Heading>
             <Paragraph>{
                 receipts && receipts.map((receipt)=>(
-                    <Card  height="small" width="xxlarge" background="light-1">
-                        <CardHeader pad="medium">Order number : { receipt.orderId }</CardHeader>
-                        <CardBody pad="medium">
-                            { receipt.orderDate} <br /> {
+                    <>
+                    <Card
+                          height="medium"
+                          pad ="small"
+                          width="large"
+                          background="light-1"
+                    >
+                        <CardHeader pad="small">Order number : <h1>{receipt.orderId }</h1></CardHeader>
+                        <CardBody height="small" pad="small">
+                            timestamp : { receipt.orderDate} <br /> order : {
                              receipt.orderItemDtos.map((order) => (
                                  order.count + ' ' + order.itemName + ', total $' + (order.orderPrice * order.count)
                         )) }</CardBody>
-                        <CardFooter pad={{horizontal: "small"}} background="light-2">
+                        <CardFooter background="light-1">
                             <Button
-                                icon={<Checkbox color="red" />}
+                                icon={<Close color="red" />}
+                                hoverIndicator
+                            />
+                            <Button
+                                icon={<Checkmark color="green" />}
                                 hoverIndicator
                             />
                         </CardFooter>
                     </Card>
-            ))
+                    <br />
+                    </>
+                ))
             }
             </Paragraph>
             </>
