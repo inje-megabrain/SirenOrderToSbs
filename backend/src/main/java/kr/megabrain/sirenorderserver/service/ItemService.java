@@ -6,6 +6,7 @@ import kr.megabrain.sirenorderserver.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -23,7 +24,12 @@ public class ItemService {
     }
 
     public void deleteItem(Long itemId) {
-        itemRepository.deleteById(itemId);
+        Item findItem = itemRepository.findById(itemId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        findItem.setIsSell(false);
+
+        itemRepository.save(findItem);
     }
 
     public void validationDuplicateItem(String itemName) {

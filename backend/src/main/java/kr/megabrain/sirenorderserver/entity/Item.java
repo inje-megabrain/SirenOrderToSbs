@@ -26,6 +26,8 @@ public class Item {
 
     private int stockNumber;
 
+    private Boolean isSell;
+
     public void removeStock(int count) {
         this.stockNumber -= count;
     }
@@ -35,6 +37,7 @@ public class Item {
         item.setItemName(itemDto.getItemName());
         item.setPrice(itemDto.getPrice());
         item.setStockNumber(itemDto.getStockNumber());
+        item.isSell = true;
         return item;
     }
 }

@@ -10,4 +10,5 @@ public class ItemDto {
     private String itemName;
     private int price;
     private int stockNumber;
+    private boolean isSell;
 }
