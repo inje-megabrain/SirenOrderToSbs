@@ -33,7 +33,6 @@ class AddMenu extends React.Component {
         stockNumber : 999,
     };
 
-
     getMenuItems = async () => {
         await axios.get('/item')
             .then(({ data }) => {
@@ -106,6 +105,24 @@ class AddMenu extends React.Component {
         this.getMenuItems().then(r => console.log(r));
     }
 
+    deleteItem = (id) => {
+        axios.delete('/item/'+id)
+            .then(({ data }) => {
+                window.location.reload();
+                console.log('item deleted');
+                alert('item deleted');
+            })
+            .catch(e => {  // API 호출이 실패한 경우
+                console.error(e);  // 에러표시
+                this.setState({
+                    loading: false
+                });
+            })
+            .finally(e => {
+
+            });
+    }
+
     render() {
         const {isLoading, items} = this.state;
         return (
@@ -155,9 +172,10 @@ class AddMenu extends React.Component {
                 <Grid columns="small" gap="small">
                     {
                         items && items.map((item) => (
-                            <Box background="neutral-3" round="small"
+                            <Card background="neutral-3" round="small"
                                  key={item.id} pad="medium"
                             >
+                                <CardBody>
                                 <h2>
                                     {item.id} : {item.itemName}
                                 </h2>
@@ -165,7 +183,15 @@ class AddMenu extends React.Component {
                                     price : ${item.price}<br/>
                                     stock : {item.stockNumber}
                                 </h3>
-                            </Box>
+                                </CardBody>
+                                <CardFooter background="neutral-3">
+                                    <Button
+                                        icon={<Close color="red" />}
+                                        hoverIndicator
+                                        onClick={() => { this.deleteItem(item.id) }}
+                                    />
+                                </CardFooter>
+                            </Card>
                         ))
                     }
                 </Grid>
