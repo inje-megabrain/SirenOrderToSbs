@@ -172,26 +172,28 @@ class AddMenu extends React.Component {
                 <Grid columns="small" gap="small">
                     {
                         items && items.map((item) => (
-                            <Card background="neutral-3" round="small"
-                                 key={item.id} pad="medium"
+                            item.isSell?(<Card background="neutral-3" round="small"
+                                               key={item.id} pad="medium"
                             >
                                 <CardBody>
-                                <h2>
-                                    {item.id} : {item.itemName}
-                                </h2>
-                                <h3>
-                                    price : ${item.price}<br/>
-                                    stock : {item.stockNumber}
-                                </h3>
+                                    <h2>
+                                        {item.id} : {item.itemName}
+                                    </h2>
+                                    <h3>
+                                        price : ${item.price}<br/>
+                                        stock : {item.stockNumber}
+                                    </h3>
                                 </CardBody>
                                 <CardFooter background="neutral-3">
                                     <Button
                                         icon={<Close color="red" />}
                                         hoverIndicator
                                         onClick={() => { this.deleteItem(item.id) }}
+                                        disabled={ !item.isSell }
                                     />
                                 </CardFooter>
-                            </Card>
+                            </Card>):(<></>)
+
                         ))
                     }
                 </Grid>
