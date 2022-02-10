@@ -28,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 
 @Controller
@@ -60,7 +61,7 @@ public class OrderController {
         embeds.put(data);
 
         webHookService.send(embeds);
-        return new ResponseEntity<Long>(order.getId(), HttpStatus.OK);
+        return new ResponseEntity(order.getId(), HttpStatus.OK);
     }
 
 
@@ -73,7 +74,7 @@ public class OrderController {
 
     @GetMapping("/order/{orderId}/accept")
     public @ResponseBody
-    ResponseEntity orderAccept(@PathVariable("orderId") Long orderId) {
+    ResponseEntity orderAccept(@PathVariable("orderId") String orderId) {
         // 주문 수락
         try {
             orderService.setOrderStatus(orderId, OrderStatus.ACCEPT);
@@ -98,7 +99,7 @@ public class OrderController {
 
     @GetMapping("/order/{orderId}/cancel")
     public @ResponseBody
-    ResponseEntity orderCancel(@PathVariable("orderId") Long orderId) {
+    ResponseEntity orderCancel(@PathVariable("orderId") String orderId) {
         // 주문 수락
         try {
             orderService.setOrderStatus(orderId, OrderStatus.CANCEL);

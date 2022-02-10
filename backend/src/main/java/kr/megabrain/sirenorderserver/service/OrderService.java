@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -39,7 +40,7 @@ public class OrderService {
         return order;
     }
 
-    public void setOrderStatus(Long orderId, OrderStatus status) {
+    public void setOrderStatus(String orderId, OrderStatus status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(EntityNotFoundException::new);
 

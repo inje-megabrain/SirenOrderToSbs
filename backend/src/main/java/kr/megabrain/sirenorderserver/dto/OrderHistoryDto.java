@@ -8,12 +8,13 @@ import lombok.Setter;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class OrderHistoryDto {
 
-    private Long orderId;
+    private String orderId;
 
     private String orderDate;
 
