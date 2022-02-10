@@ -1,4 +1,5 @@
-import {Heading} from "grommet";
+import {Button, Card, CardBody, CardFooter, CardHeader, Heading} from "grommet";
+import {Checkbox} from "grommet-icons";
 import React from "react";
 import axios from "axios";
 import ReceiptsTemplate from "../support/receiptDefault";
@@ -17,7 +18,7 @@ class Receipt extends React.Component {
                     loading: true,
                     receipts: data
                 });
-                console.log(data.orderId);
+                console.log('loaded data id is ' + data.orderId);
             })
             .catch(e => {  // API 호출이 실패한 경우
                 console.error(e);  // 에러표시
@@ -45,11 +46,20 @@ class Receipt extends React.Component {
             <Heading>Receipt 🧾</Heading>
             <Paragraph>{
                 receipts && receipts.map((receipt)=>(
-                    <Paragraph>id : { receipt.orderId }<br/>
-                        date : { receipt.orderDate }<br />
-                        order : { receipt.orderItemDtos.map((order) => (
-                            order.itemName + ', ' + order.count + ', ' + order.orderPrice
-                        )) }</Paragraph>
+                    <Card  height="small" width="xxlarge" background="light-1">
+                        <CardHeader pad="medium">Order number : { receipt.orderId }</CardHeader>
+                        <CardBody pad="medium">
+                            { receipt.orderDate} <br /> {
+                             receipt.orderItemDtos.map((order) => (
+                                 order.count + ' ' + order.itemName + ', total $' + (order.orderPrice * order.count)
+                        )) }</CardBody>
+                        <CardFooter pad={{horizontal: "small"}} background="light-2">
+                            <Button
+                                icon={<Checkbox color="red" />}
+                                hoverIndicator
+                            />
+                        </CardFooter>
+                    </Card>
             ))
             }
             </Paragraph>
