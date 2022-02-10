@@ -8,7 +8,7 @@ class Order extends React.Component {
     // 주문 폼에 대한 객체
     orderForm = {
         size: 'tall',
-        ice : 'ICE',
+        ice : 'ice',
         count : 1,
         name : 'shonn',
         menuId : 1,
@@ -18,7 +18,7 @@ class Order extends React.Component {
     state = {
         isLoading: true,
         menus: menusTemplate,
-        ice : 'ICE',
+        ice : 'ice',
         size: 'tall',
         menuName : 'americano',
         count : 1,
@@ -49,7 +49,9 @@ class Order extends React.Component {
     newOrder = async () => {
         await axios.post('/order', {
             itemId:this.orderForm.menuId,
-            count:this.orderForm.count
+            count:this.orderForm.count,
+            ice:this.orderForm.ice,
+            size:this.orderForm.size
         })
             .then((response) => {
                 alert("주문번호 : " + response.data + "번 주문 성공");
@@ -73,6 +75,27 @@ class Order extends React.Component {
         });
         console.log(this.orderForm);
     }
+
+    handleChangeItemIce = (e) => {
+        console.log(e.target.value);
+        this.orderForm.ice = e.target.value;
+
+        this.setState({
+            ice: this.orderForm.ice
+        });
+        console.log(this.orderForm);
+    }
+
+    handleChangeItemSize = (e) => {
+        console.log(e.target.value);
+        this.orderForm.size = e.target.value;
+
+        this.setState({
+            size: this.orderForm.size
+        });
+        console.log(this.orderForm);
+    }
+
     handleChangeItemName = (e) => {
         console.log(e.value);
 
@@ -107,35 +130,33 @@ class Order extends React.Component {
                     <Box
                         direction="row"
                         border={{color: 'brand', size: 'small'}}
-                        pad="medium"
+                        pad="small"
                     >
                         <Box pad="medium">
                             <Paragraph>Menu</Paragraph>
-                            <section className="container">
-                                {isLoading?(
-                                    <div className="loader">
-                                        <span className="loader__text">Loading...</span>
-                                    </div>
-                                ):(
-                                    <Select
-                                        className="menus"
-                                        value={this.state.menuName}
-                                        //placeholder=""
-                                        onChange={this.handleChangeItemName}
-                                        options={
-                                            menus && menus.map((menu)=>(
-                                                menu.itemName
-                                            ))}
-                                    />
-                                )}
-                            </section>
+                            {isLoading?(
+                                <div className="loader">
+                                    <span className="loader__text">Loading...</span>
+                                </div>
+                            ):(
+                                <Select
+                                    className="menus"
+                                    value={this.state.menuName}
+                                    //placeholder=""
+                                    onChange={this.handleChangeItemName}
+                                    options={
+                                        menus && menus.map((menu)=>(
+                                            menu.itemName
+                                        ))}
+                                />
+                            )}
                         </Box>
                         <Box pad="medium">
-                            <Paragraph>ICE or HOT</Paragraph>
+                            <Paragraph>ice or hot</Paragraph>
                             <Select
-                                options={['ICE', 'HOT']}
+                                options={['ice', 'hot']}
                                 value={this.state.ice}
-                                onChange={({option}) => this.setState({ ice: option} )}
+                                onChange={this.handleChangeItemIce}
                             />
                         </Box>
                         <Box pad="medium">
@@ -143,7 +164,7 @@ class Order extends React.Component {
                             <Select
                                 options={['tall', 'grande', 'venti']}
                                 value={this.state.size}
-                                onChange={({option}) => this.setState({ size: option} )}
+                                onChange={this.handleChangeItemSize}
                             />
                         </Box>
                         <Box pad="medium">

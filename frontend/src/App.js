@@ -18,16 +18,11 @@ function App() {
         <Grommet full>
             <Box
                 direction="row"
-                border={{ color: 'neutral-3', size: 'medium' }}
-                pad="xsmall"
-            >
-                    <Box pad="small" >
+                border={{ color: 'neutral-3', size: 'medium' }} >
+                    <Box pad="medium" >
                         <Sidebar background="neutral-3" round="small"
                                  header={
-                                     <Avatar src="//s.gravatar.com/avatar/b7fb138d53ba0f573212ccce38a7c43b?s=80" />
-                                 }
-                                 footer={
-                                     <Button icon={<Help />} hoverIndicator />
+                                     <Avatar src="https://avatars.githubusercontent.com/u/80839419?v=4" />
                                  }
                         >
                             <Nav gap="small">
@@ -37,8 +32,8 @@ function App() {
                             </Nav>
                         </Sidebar>
                     </Box>
-                    <Box pad="xlarge" >
-                        <Main pad="large">
+                    <Box pad="large" >
+                        <Main>
                             <BrowserRouter>
                                 <Routes>
                                     <Route path="/" caseSensitive={false} element={<Order/>} />
