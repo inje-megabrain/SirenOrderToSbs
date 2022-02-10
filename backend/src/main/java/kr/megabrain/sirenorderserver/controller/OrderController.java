@@ -54,7 +54,8 @@ public class OrderController {
         data.put("description", "name" + "님의 소중한 주문이 접수되었습니다. \n\n" +
                 "주문 일시 : " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "\n" +
                         "주문 번호 : " + order.getId() + "\n" +
-                        "주문 내역 : " + order.getOrderItems().get(0).getItem().getItemName() + " x " + order.getOrderItems().get(0).getCount() + " "
+                        "주문 내역 : " + order.getOrderItems().get(0).getItem().getItemName() + " x " + order.getOrderItems().get(0).getCount() +
+                        " " + order.getOrderItems().get(0).getIce() + " " + order.getOrderItems().get(0).getSize()
         );
         data.put("url", "http://shonn.megabrain.kr:9995/receipt");
         embeds.put(data);

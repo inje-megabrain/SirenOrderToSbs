@@ -29,7 +29,7 @@ public class OrderService {
                 .orElseThrow(EntityNotFoundException::new);
         // 이메일 생략
         List<OrderItem> orderItems = new ArrayList<>();
-        OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getCount());
+        OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getIce(), orderDto.getSize(), orderDto.getCount());
         orderItems.add(orderItem);
 
         Order order = Order.createOrder(orderItems);

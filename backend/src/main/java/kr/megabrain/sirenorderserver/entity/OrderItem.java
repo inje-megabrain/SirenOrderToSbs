@@ -22,15 +22,21 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    // itemdetail
+    private String ice;
+    private String size;
     private int orderPrice;
     private int count;
 
 
-    public static OrderItem createOrderItem(Item item, int count) {
+    public static OrderItem createOrderItem(Item item, String ice, String size, int count) {
         OrderItem orderItem = new OrderItem();
         orderItem.setItem(item);
         orderItem.setCount(count);
         orderItem.setOrderPrice(item.getPrice());
+        orderItem.setIce(ice);
+        orderItem.setSize(size);
+
         item.removeStock(count);
         return orderItem;
     }

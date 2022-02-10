@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 public class OrderDto {
 
     private Long itemId;
+    private String ice;
+    private String size;
     private int count;
 
 }
