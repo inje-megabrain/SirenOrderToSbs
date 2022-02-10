@@ -20,7 +20,7 @@ public class Order {
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
-    private String id = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+    private String id = UUID.randomUUID().toString().replace("-", "").substring(0, 16).toUpperCase();
 
     private LocalDateTime orderDate;
 
