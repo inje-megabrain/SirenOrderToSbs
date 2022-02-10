@@ -22,6 +22,10 @@ public class ItemService {
         return item;
     }
 
+    public void deleteItem(Long itemId) {
+        itemRepository.deleteById(itemId);
+    }
+
     public void validationDuplicateItem(String itemName) {
         Item item = itemRepository.findByItemName(itemName);
         if (item != null) {

@@ -17,10 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -53,15 +50,15 @@ public class OrderController {
         data.put("title", "\uD83D\uDCE3 [주문 접수 안내 ]");
         data.put("description", "name" + "님의 소중한 주문이 접수되었습니다. \n\n" +
                 "주문 일시 : " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "\n" +
-                        "주문 번호 : " + order.getId() + "\n" +
-                        "주문 내역 : " + order.getOrderItems().get(0).getItem().getItemName() + " x " + order.getOrderItems().get(0).getCount() +
-                        " " + order.getOrderItems().get(0).getIce() + " " + order.getOrderItems().get(0).getSize()
+                "주문 번호 : " + order.getId() + "\n" +
+                "주문 내역 : " + order.getOrderItems().get(0).getItem().getItemName() + " x " + order.getOrderItems().get(0).getCount() +
+                " " + order.getOrderItems().get(0).getIce() + " " + order.getOrderItems().get(0).getSize()
         );
         data.put("url", "http://shonn.megabrain.kr:9995/receipt");
         embeds.put(data);
 
         webHookService.send(embeds);
-        return new ResponseEntity<Long>(order.getId() , HttpStatus.OK);
+        return new ResponseEntity<Long>(order.getId(), HttpStatus.OK);
     }
 
     @GetMapping("/order")
@@ -69,5 +66,11 @@ public class OrderController {
     ResponseEntity getAllOrders() {
         List<OrderHistoryDto> orderHistoryDtos = orderService.allOrder();
         return new ResponseEntity(orderHistoryDtos, HttpStatus.OK);
+    }
+
+    @GetMapping("/order/{orderId}/accpept")
+    public @ResponseBody
+    ResponseEntity orderAccept(@PathVariable("orderId") Long orderId) {
+        return null;
     }
 }
