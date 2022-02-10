@@ -1,5 +1,6 @@
 package kr.megabrain.sirenorderserver.service;
 
+import kr.megabrain.sirenorderserver.constant.OrderStatus;
 import kr.megabrain.sirenorderserver.dto.OrderDto;
 import kr.megabrain.sirenorderserver.dto.OrderHistoryDto;
 import kr.megabrain.sirenorderserver.dto.OrderItemDto;
@@ -36,6 +37,13 @@ public class OrderService {
         orderRepository.save(order);
 
         return order;
+    }
+
+    public void setOrderStatus(Long orderId, OrderStatus status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+        order.setOrderStatus(status);
+        orderRepository.save(order);
     }
 
     @Transactional(readOnly = true)

@@ -1,5 +1,6 @@
 package kr.megabrain.sirenorderserver.controller;
 
+import kr.megabrain.sirenorderserver.constant.OrderStatus;
 import kr.megabrain.sirenorderserver.discord.service.WebHookService;
 import kr.megabrain.sirenorderserver.dto.OrderDto;
 import kr.megabrain.sirenorderserver.dto.OrderHistoryDto;
@@ -61,6 +62,7 @@ public class OrderController {
         return new ResponseEntity<Long>(order.getId(), HttpStatus.OK);
     }
 
+
     @GetMapping("/order")
     public @ResponseBody
     ResponseEntity getAllOrders() {
@@ -68,9 +70,27 @@ public class OrderController {
         return new ResponseEntity(orderHistoryDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/order/{orderId}/accpept")
+    @GetMapping("/order/{orderId}/accept")
     public @ResponseBody
     ResponseEntity orderAccept(@PathVariable("orderId") Long orderId) {
-        return null;
+        // 주문 수락
+        try {
+            orderService.setOrderStatus(orderId, OrderStatus.ACCEPT);
+        } catch (Exception e) {
+            return new ResponseEntity("없는 주문입니다.", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("수락되었습니다.", HttpStatus.OK);
+    }
+
+    @GetMapping("/order/{orderId}/cancel")
+    public @ResponseBody
+    ResponseEntity orderCancel(@PathVariable("orderId") Long orderId) {
+        // 주문 수락
+        try {
+            orderService.setOrderStatus(orderId, OrderStatus.CANCEL);
+        } catch (Exception e) {
+            return new ResponseEntity("없는 주문입니다.", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("취소되었습니다.", HttpStatus.OK);
     }
 }
