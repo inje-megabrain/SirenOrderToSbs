@@ -1,0 +1,1 @@
+devServer: { disableHostCheck: true }

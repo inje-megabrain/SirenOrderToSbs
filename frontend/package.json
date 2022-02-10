@@ -9,9 +9,12 @@
     "axios": "^0.25.0",
     "grommet": "^2.20.1",
     "grommet-icons": "^4.7.0",
+    "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
+    "react-select": "^5.2.2",
     "styled-components": "^5.3.3",
     "web-vitals": "^2.1.0"
   },
@@ -27,9 +30,7 @@
       "react-app/jest"
     ]
   },
-
-  "proxy": "http://localhost:8080",
-
+  "proxy": "http://shonn.megabrain.kr:9998/",
   "browserslist": {
     "production": [
       ">0.2%",
