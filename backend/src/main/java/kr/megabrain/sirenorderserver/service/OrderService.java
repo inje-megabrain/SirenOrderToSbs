@@ -1,5 +1,6 @@
 package kr.megabrain.sirenorderserver.service;
 
+import kr.megabrain.sirenorderserver.constant.OrderStatus;
 import kr.megabrain.sirenorderserver.dto.OrderDto;
 import kr.megabrain.sirenorderserver.dto.OrderHistoryDto;
 import kr.megabrain.sirenorderserver.dto.OrderItemDto;
@@ -24,18 +25,30 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
 
-    public Long order(OrderDto orderDto, String email) {
+    public Order order(OrderDto orderDto, String email) {
         Item item = itemRepository.findById(orderDto.getItemId())
                 .orElseThrow(EntityNotFoundException::new);
         // 이메일 생략
         List<OrderItem> orderItems = new ArrayList<>();
-        OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getCount());
+        OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getIce(), orderDto.getSize(), orderDto.getCount());
         orderItems.add(orderItem);
 
         Order order = Order.createOrder(orderItems);
         orderRepository.save(order);
 
-        return order.getId();
+        return order;
+    }
+
+    public void setOrderStatus(Long orderId, OrderStatus status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (!order.getOrderStatus().equals(OrderStatus.ORDER)) {
+            throw new IllegalStateException();
+        }
+
+        order.setOrderStatus(status);
+        orderRepository.save(order);
     }
 
     @Transactional(readOnly = true)
