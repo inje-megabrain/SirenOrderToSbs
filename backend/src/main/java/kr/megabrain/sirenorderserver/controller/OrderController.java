@@ -8,6 +8,8 @@ import kr.megabrain.sirenorderserver.entity.Order;
 import kr.megabrain.sirenorderserver.service.ItemService;
 import kr.megabrain.sirenorderserver.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -22,7 +24,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 @Controller
@@ -36,26 +42,25 @@ public class OrderController {
     public @ResponseBody
     ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto) {
 
-        Long orderId;
+        Order order;
         try {
-            orderId = orderService.order(orderDto, "");
+            order = orderService.order(orderDto, "");
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-        webHookService.send(
-                "[주문 접수 안내]\n" +
-                "\n" +
-                "주문해주셔서 감사합니다.\n" +
-                "\n" +
-                "고객님의 소중한 주문이 정상 접수되어, time분 내외로 도착할 예정입니다.\n" +
-                "\n" +
-                "- 주문 일시 : " + "time" +
-                "- 주문 번호 : " +  orderId + " \n" +
-                "- 상품명 : 돈친\n" +
-                "- 주문 내역 : 까르보나라 x 1 외 1 건\n"
+        JSONArray embeds = new JSONArray();
+        JSONObject data = new JSONObject();
+        data.put("title", "\uD83D\uDCE3 [주문 접수 안내 ]");
+        data.put("description", "name" + "님의 소중한 주문이 접수되었습니다. \n\n" +
+                "주문 일시 : " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "\n" +
+                        "주문 번호 : " + order.getId() + "\n" +
+                        "주문 내역 : " + order.getOrderItems().get(0).getItem().getItemName() + " x " + order.getOrderItems().get(0).getCount() + " "
         );
-        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
+        data.put("url", "http://shonn.megabrain.kr:9995/receipt");
+        embeds.put(data);
+
+        webHookService.send(embeds);
+        return new ResponseEntity<Long>(order.getId() , HttpStatus.OK);
     }
 
     @GetMapping("/order")
