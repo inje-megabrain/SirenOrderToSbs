@@ -22,6 +22,8 @@ public class Member {
 
     private String password;
 
+    private String nickname;
+    
     @Enumerated(EnumType.STRING)
     private Role role;
 

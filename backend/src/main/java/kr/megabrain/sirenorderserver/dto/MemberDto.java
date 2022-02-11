@@ -17,10 +17,14 @@ public class MemberDto {
     @NotNull
     private String password;
 
+    @NotNull
+    private String nickname;
+
     public static MemberDto from(Member member) {
         return MemberDto.builder()
                 .username(member.getUsername())
                 .password(member.getPassword())
+                .nickname(member.getNickname())
                 .build();
     }
 }

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,7 @@ public class OrderController {
 
     private final OrderService orderService;
     private final WebHookService webHookService;
+    private final AuditorAware auditorAware;
 
     @PostMapping("/order")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -53,7 +55,7 @@ public class OrderController {
         JSONArray embeds = new JSONArray();
         JSONObject data = new JSONObject();
         data.put("title", "\uD83D\uDCE3 [주문 접수 안내 ]");
-        data.put("description", "name" + "님의 소중한 주문이 접수되었습니다. \n\n" +
+        data.put("description", auditorAware.getCurrentAuditor() + "님의 소중한 주문이 접수되었습니다. \n\n" +
                 "주문 일시 : " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "\n" +
                 "주문 번호 : " + order.getId() + "\n" +
                 "주문 내역 : " + order.getOrderItems().get(0).getItem().getItemName() + " x " + order.getOrderItems().get(0).getCount() +
@@ -92,7 +94,7 @@ public class OrderController {
         JSONArray embeds = new JSONArray();
         JSONObject data = new JSONObject();
         data.put("title", "\uD83D\uDCE3 [주문 수락 안내 ]");
-        data.put("description", "name" + "님의 소중한 주문이 수락되었습니다. \n\n" +
+        data.put("description", auditorAware.getCurrentAuditor() + "님의 소중한 주문이 수락되었습니다. \n\n" +
                 "주문 번호 : " + orderId
         );
         embeds.put(data);
@@ -116,7 +118,7 @@ public class OrderController {
         JSONArray embeds = new JSONArray();
         JSONObject data = new JSONObject();
         data.put("title", "\uD83D\uDCE3 [주문 취소 안내 ]");
-        data.put("description", "name" + "님의 소중한 주문이 취소되었습니다. \n\n" +
+        data.put("description", auditorAware.getCurrentAuditor() + "님의 소중한 주문이 취소되었습니다. \n\n" +
                 "주문 번호 : " + orderId
         );
         embeds.put(data);

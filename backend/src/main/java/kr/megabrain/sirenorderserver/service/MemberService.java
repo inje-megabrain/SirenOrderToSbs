@@ -32,6 +32,7 @@ public class MemberService  {
 
         Member member = Member.builder()
                 .username(memberDto.getUsername())
+                .nickname(memberDto.getNickname())
                 .password(passwordEncoder.encode(memberDto.getPassword()))
                 .role(Role.USER)
                 .build();

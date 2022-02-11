@@ -5,9 +5,11 @@ import kr.megabrain.sirenorderserver.dto.OrderDto;
 import kr.megabrain.sirenorderserver.dto.OrderHistoryDto;
 import kr.megabrain.sirenorderserver.dto.OrderItemDto;
 import kr.megabrain.sirenorderserver.entity.Item;
+import kr.megabrain.sirenorderserver.entity.Member;
 import kr.megabrain.sirenorderserver.entity.Order;
 import kr.megabrain.sirenorderserver.entity.OrderItem;
 import kr.megabrain.sirenorderserver.repository.ItemRepository;
+import kr.megabrain.sirenorderserver.repository.MemberRepository;
 import kr.megabrain.sirenorderserver.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,16 +27,19 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
+    private final MemberRepository memberRepository;
 
-    public Order order(OrderDto orderDto, String email) {
+    public Order order(OrderDto orderDto, String username) {
         Item item = itemRepository.findById(orderDto.getItemId())
                 .orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByUsername(username);
+
         // 이메일 생략
         List<OrderItem> orderItems = new ArrayList<>();
         OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getIce(), orderDto.getSize(), orderDto.getCount());
         orderItems.add(orderItem);
 
-        Order order = Order.createOrder(orderItems);
+        Order order = Order.createOrder(member, orderItems);
         orderRepository.save(order);
 
         return order;
@@ -57,7 +62,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderHistoryDto> allOrder() {
-        List<Order> orders = orderRepository.findOrders();
+        List<Order> orders = orderRepository.findAllOrders();
         List<OrderHistoryDto> orderHistoryDtos = new ArrayList<>();
 
         for (Order order : orders) {

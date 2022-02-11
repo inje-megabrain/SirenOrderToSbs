@@ -27,6 +27,10 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     @JsonIgnore
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL
             , orphanRemoval = true, fetch = FetchType.LAZY)
@@ -37,8 +41,11 @@ public class Order {
         orderItem.setOrder(this);
     }
 
-    public static Order createOrder(List<OrderItem> orderItems) {
+    public static Order createOrder(Member member, List<OrderItem> orderItems) {
         Order order = new Order();
+
+        order.setMember(member);
+
         for (OrderItem orderItem : orderItems) {
             order.addOrderItem(orderItem);
         }

@@ -31,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 로그인 설정
                 .loginPage("/login")
                 .usernameParameter("username")
+                .successForwardUrl("/member/info")
                 .and()
                 // 로그아웃 설정
                 .logout()
