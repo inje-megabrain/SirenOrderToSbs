@@ -124,7 +124,7 @@ class Order extends React.Component {
     }
 
     render() {
-        const {isLoading, menus} = this.state;
+        const {isLoading, menus } = this.state;
         return (
             <>
                 <Heading>Order Coffee ☕️</Heading>
@@ -151,8 +151,10 @@ class Order extends React.Component {
                                     //placeholder=""
                                     onChange={this.handleChangeItemName}
                                     options={
-                                        menus && menus.map((menu) => (
-                                            menu.isSell ? (menu.itemName) : console.log(menu.itemName + ' item is disabled')
+                                        menus && menus
+                                            .filter(menu => menu.isSell == true)
+                                            .map((menu) => (
+                                            menu.itemName
                                         ))
                                     }
                                 />
