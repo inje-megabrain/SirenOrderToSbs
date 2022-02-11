@@ -35,7 +35,7 @@ public class ItemController {
     }
 
     @GetMapping("/item")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity getAllItem() {
 
         List<Item> items = itemService.allItem();
