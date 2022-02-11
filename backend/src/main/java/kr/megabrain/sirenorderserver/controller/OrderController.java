@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -39,6 +40,7 @@ public class OrderController {
     private final WebHookService webHookService;
 
     @PostMapping("/order")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public @ResponseBody
     ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto) {
 
@@ -66,6 +68,7 @@ public class OrderController {
 
 
     @GetMapping("/order")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
     ResponseEntity getAllOrders() {
         List<OrderHistoryDto> orderHistoryDtos = orderService.allOrder();
@@ -73,6 +76,7 @@ public class OrderController {
     }
 
     @GetMapping("/order/{orderId}/accept")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
     ResponseEntity orderAccept(@PathVariable("orderId") String orderId) {
         // 주문 수락
@@ -98,6 +102,7 @@ public class OrderController {
     }
 
     @GetMapping("/order/{orderId}/cancel")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
     ResponseEntity orderCancel(@PathVariable("orderId") String orderId) {
         // 주문 수락

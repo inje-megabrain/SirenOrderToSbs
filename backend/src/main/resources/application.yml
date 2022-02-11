@@ -5,13 +5,11 @@ spring:
   profiles:
     include:
       - discord
+      - secret
 
   datasource:
     hikari:
       maximum-pool-size: 4
-    url: jdbc:postgresql://localhost:5432/sbs
-    username: postgres
-    password: postgres
   jpa:
     hibernate:
       default_batch_fetch_size: 1000

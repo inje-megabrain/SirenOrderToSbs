@@ -38,3 +38,4 @@ out/
 
 ## secret
 application-discord.yml
+application-secret.yml
