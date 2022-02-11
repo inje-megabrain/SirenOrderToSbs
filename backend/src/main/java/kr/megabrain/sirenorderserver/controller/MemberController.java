@@ -37,7 +37,7 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/member/info")
+    @GetMapping("/")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity getMyinfo(Authentication authentication) {
         try {
