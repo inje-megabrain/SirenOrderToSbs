@@ -26,6 +26,7 @@ class Order extends React.Component {
 
 
     getMenus = async () => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwtToken')}`;
         await axios.get('/item')
             .then(({ data }) => {
                 this.setState({
@@ -48,6 +49,7 @@ class Order extends React.Component {
 
     newOrder = async () => {
         if (this.orderForm.count > 0) {
+            axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwtToken')}`;
             await axios.post('/order', {
                 itemId: this.orderForm.menuId,
                 count: this.orderForm.count,
@@ -62,10 +64,7 @@ class Order extends React.Component {
         }else{
             alert('count cannot be nagative');
         }
-
-    }
-
-    ;
+    };
 
     getItemIdBySelectedItem = (e) => {
         if(e.itemName === this.orderForm.menuName){

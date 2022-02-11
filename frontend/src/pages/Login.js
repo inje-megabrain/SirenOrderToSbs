@@ -1,6 +1,8 @@
 import React from "react";
 import {Heading, Form, Box, FormField, Button, Paragraph} from "grommet";
 import axios from "axios";
+import {useRecoilState} from "recoil";
+import {loginState} from "../state";
 
 class Login extends React.Component {
     loginForm = {
@@ -25,7 +27,23 @@ class Login extends React.Component {
     }
 
     LoginSubmit = () => {
-        window.location.href = "/login?username="+this.loginForm.id+"&password="+this.loginForm.pw;
+        const data = {
+            username: this.state.id,
+            password: this.state.pw
+        };
+        axios.post('/login', data).then(response => {
+            const token = response.data.token;
+            // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
+            axios.defaults.withCredentials = true;
+            console.log(axios.defaults.headers.common['Authorization'] = `Bearer ${token}`);
+            localStorage.setItem('jwtToken', token);
+            alert('logined!');
+            // accessToken을 localStorage, cookie 등에 저장하지 않는다!
+            window.location.href = "/";
+
+        }).catch(error => {
+            // ... 에러 처리
+        });
     }
 
     render() {
@@ -42,7 +60,7 @@ class Login extends React.Component {
                             <Heading level="3" margin ="0">Id</Heading>
                             <FormField
                                 type="normal"
-                                placeholder="id" required
+                                placeholder="id"
                                 onChange={this.handleChangeId}
                             />
                         </Box>
@@ -50,7 +68,7 @@ class Login extends React.Component {
                             <Heading level="3" margin ="0">Password</Heading>
                             <FormField
                                 type="password"
-                                placeholder="pw" required
+                                placeholder="pw"
                                 onChange={this.handleChangePw}
                             />
                         </Box>

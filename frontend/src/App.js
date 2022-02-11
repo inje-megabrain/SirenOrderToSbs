@@ -23,6 +23,7 @@ import {Java, User, Script, Add} from "grommet-icons";
 import SignUp from "./pages/SignUp";
 import MainPage from "./pages/Main";
 import {loginState, loginUsername, loginNickname} from "./state";
+import axios from "axios";
 
 function App() {
     return (
@@ -34,7 +35,11 @@ function App() {
                     <Button href= "/receipt" icon={<Script />} hoverIndicator />
                     <Button href= "/addmenu" icon={<Add />} hoverIndicator />
                 </Box>
-                <Menu icon={<User />} items={[useRecoilState(loginState)?{ label: 'login', href: '/login'}:{ label: 'logout', href:'/logout'}, { label: 'signup', href: '/signup'}]} />
+                <Menu icon={<User />} items={[localStorage.getItem('jwtToken')?{ label: 'logout', onClick:()=>{
+                    window.location.href="/logout";
+                    localStorage.removeItem('jwtToken');
+                    window.location.href="/";
+                    }}:{ label: 'login', href: '/login'}, { label: 'signup', href: '/signup'}]} />
             </Header>
             <Box
                 direction="row"
