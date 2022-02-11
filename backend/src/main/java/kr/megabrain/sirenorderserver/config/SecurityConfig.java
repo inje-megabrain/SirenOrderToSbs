@@ -30,9 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 // 로그인 설정
                 .loginPage("/login")
-                .defaultSuccessUrl("/order")
                 .usernameParameter("username")
-                .failureUrl("/login/error")
                 .and()
                 // 로그아웃 설정
                 .logout()

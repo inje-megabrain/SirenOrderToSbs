@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findByUsername(username);
         // 해당 유저가 DB에 등록 됬는지 검사
         if (member == null) {
-            throw new RuntimeException("가입안한 사용자입니다.");
+            throw new RuntimeException("존재하지 않는 유저입니다.");
         }
 
         // 스프링 시큐리티가 제공하는 user 반환
