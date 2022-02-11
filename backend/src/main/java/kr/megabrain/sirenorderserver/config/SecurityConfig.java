@@ -1,55 +1,88 @@
 package kr.megabrain.sirenorderserver.config;
 
 
+import kr.megabrain.sirenorderserver.jwt.JwtAccessDeniedHandler;
+import kr.megabrain.sirenorderserver.jwt.JwtAuthenticationEntryPoint;
+import kr.megabrain.sirenorderserver.jwt.JwtSecurityConfig;
+import kr.megabrain.sirenorderserver.jwt.TokenProvider;
 import kr.megabrain.sirenorderserver.service.CustomUserDetailsService;
 import kr.megabrain.sirenorderserver.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-@Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private final TokenProvider tokenProvider;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-
-        http.csrf().disable().cors().disable();
-
-        http.formLogin()
-                // 로그인 설정
-                .usernameParameter("username")
-                .and()
-                // 로그아웃 설정
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/");
-
-        http.authorizeRequests() // httpServletRequest 사용
-                .mvcMatchers("/ping", "/signup", "/login").permitAll() // 해당 경로들은 비인증으로 접근 허용
-                .anyRequest().authenticated();  // 나머지 경로들은 모두 인증 요구
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // 인증
-        auth.userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder());    // 비밀번호 암호화
+    public SecurityConfig(
+            TokenProvider tokenProvider,
+            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+            JwtAccessDeniedHandler jwtAccessDeniedHandler
+    ) {
+        this.tokenProvider = tokenProvider;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring()
+                .antMatchers(
+                        "/h2-console/**"
+                        ,"/favicon.ico"
+                );
+    }
+
+    @Override
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
+                .csrf().disable()
+
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+
+                // enable h2-console
+                .and()
+                .headers()
+                .frameOptions()
+                .sameOrigin()
+
+                // 세션을 사용하지 않기 때문에 STATELESS로 설정
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+                .and()
+                .authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/signup").permitAll()
+
+                .anyRequest().authenticated()
+
+                .and()
+                .apply(new JwtSecurityConfig(tokenProvider));
     }
 }
