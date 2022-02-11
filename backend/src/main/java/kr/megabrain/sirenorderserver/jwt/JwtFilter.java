@@ -35,10 +35,10 @@ public class JwtFilter extends GenericFilterBean {
         String requestURI = httpServletRequest.getRequestURI();
 
 
-        if(requestURI.contains("login")){
-            filterChain.doFilter(servletRequest, servletResponse);
-            return;
-        }
+//        if(requestURI.contains("signup")){
+//            filterChain.doFilter(servletRequest, servletResponse);
+//            return;
+//        }
 
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             Authentication authentication = tokenProvider.getAuthentication(jwt);

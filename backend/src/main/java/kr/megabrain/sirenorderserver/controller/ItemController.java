@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping("/item/new")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
     ResponseEntity addItem(@Valid @RequestBody ItemDto itemDto) {
         Item savedItem;
@@ -33,6 +35,7 @@ public class ItemController {
     }
 
     @GetMapping("/item")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity getAllItem() {
 
         List<Item> items = itemService.allItem();
@@ -41,6 +44,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/item/{itemId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody ResponseEntity deleteItem(@PathVariable("itemId") Long itemId) {
         try {
             itemService.deleteItem(itemId);

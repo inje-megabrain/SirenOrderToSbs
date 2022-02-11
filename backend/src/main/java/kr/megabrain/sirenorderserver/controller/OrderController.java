@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -46,8 +47,8 @@ public class OrderController {
     @PostMapping("/order")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public @ResponseBody
-    ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto, @PathVariable("jwt") String jwt) {
-        Authentication authentication = tokenProvider.getAuthentication(jwt);
+    ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Order order;
         try {
@@ -83,8 +84,8 @@ public class OrderController {
     @GetMapping("/order/{orderId}/accept")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
-    ResponseEntity orderAccept(@PathVariable("orderId") String orderId, @PathVariable("jwt") String jwt) {
-        Authentication authentication = tokenProvider.getAuthentication(jwt);
+    ResponseEntity orderAccept(@PathVariable("orderId") String orderId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // 주문 수락
         try {
@@ -111,8 +112,8 @@ public class OrderController {
     @GetMapping("/order/{orderId}/cancel")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
-    ResponseEntity orderCancel(@PathVariable("orderId") String orderId, @PathVariable("jwt") String jwt) {
-        Authentication authentication = tokenProvider.getAuthentication(jwt);
+    ResponseEntity orderCancel(@PathVariable("orderId") String orderId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // 주문 수락
         try {
