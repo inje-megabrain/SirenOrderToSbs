@@ -187,7 +187,7 @@ class Order extends React.Component {
                     </Box>
                     <br/>
                     <Box direction="row" gap="medium">
-                        <Button type="submit" onClick={this.newOrder} primary label="Submit"/>
+                        <Button type="submit" onClick={this.newOrder} primary label="order now!"/>
                     </Box>
                 </Form>
             </>
