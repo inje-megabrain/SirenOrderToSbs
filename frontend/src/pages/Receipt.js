@@ -90,8 +90,8 @@ class Receipt extends React.Component {
                           background="light-1"
                           key={receipt.orderId}
                     >
-                        <CardHeader pad="small"> <h1>{receipt.orderStatus} {receipt.orderId }</h1></CardHeader>
-                        <CardBody height="small" pad="small">
+                        <CardBody height="small" pad="xsmall">
+                            <Heading level="1" color={receipt.orderStatus !== 'ORDER'?'status-disabled':'status-ok'}>{receipt.orderStatus }</Heading>
                             {
                              receipt.orderItemDtos.map((order) => (
                                  <>
@@ -101,7 +101,9 @@ class Receipt extends React.Component {
                                     </h2>
                                      { receipt.orderDate} <br />
                                  </>
-                        )) }</CardBody>
+                        )) }
+                            <Paragraph fill ="true">{receipt.orderId }</Paragraph>
+                        </CardBody>
                         <CardFooter background="light-1">
                             <Button
                                 icon={<Close color="red" />}

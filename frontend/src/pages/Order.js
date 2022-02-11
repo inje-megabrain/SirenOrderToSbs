@@ -9,9 +9,9 @@ class Order extends React.Component {
     orderForm = {
         size: 'tall',
         ice : 'ice',
-        count : 1,
+        count : '1',
         name : 'shonn',
-        menuId : 1,
+        menuId : '1',
         menuName : ''
     };
 
@@ -21,7 +21,7 @@ class Order extends React.Component {
         ice : 'ice',
         size: 'tall',
         menuName : 'americano',
-        count : 1,
+        count : '1',
     };
 
 
@@ -47,17 +47,21 @@ class Order extends React.Component {
     };
 
     newOrder = async () => {
-        await axios.post('/order', {
-            itemId:this.orderForm.menuId,
-            count:this.orderForm.count,
-            ice:this.orderForm.ice,
-            size:this.orderForm.size
-        })
-            .then((response) => {
-                alert("주문번호 : " + response.data + "번 주문 성공");
-                console.log(response);
+        if (this.orderForm.count > 0) {
+            await axios.post('/order', {
+                itemId: this.orderForm.menuId,
+                count: this.orderForm.count,
+                ice: this.orderForm.ice,
+                size: this.orderForm.size
             })
-            .catch((error) => alert(error.response.data))
+                .then((response) => {
+                    alert("주문번호 : " + response.data + "번 주문 성공");
+                    console.log(response);
+                })
+                .catch((error) => alert(error.response.data))
+        }else{
+            alert('count cannot be nagative');
+        }
 
     }
 
@@ -72,7 +76,6 @@ class Order extends React.Component {
     handleChangeItemCount = (e) => {
         console.log(e.target.value);
         this.orderForm.count = e.target.value;
-
         this.setState({
             count: this.orderForm.count
         });
@@ -121,7 +124,7 @@ class Order extends React.Component {
     }
 
     render() {
-        const {isLoading, menus} = this.state;
+        const {isLoading, menus } = this.state;
         return (
             <>
                 <Heading>Order Coffee ☕️</Heading>
@@ -148,9 +151,12 @@ class Order extends React.Component {
                                     //placeholder=""
                                     onChange={this.handleChangeItemName}
                                     options={
-                                        menus && menus.map((menu)=>(
+                                        menus && menus
+                                            .filter(menu => menu.isSell == true)
+                                            .map((menu) => (
                                             menu.itemName
-                                        ))}
+                                        ))
+                                    }
                                 />
                             )}
                         </Box>
@@ -173,7 +179,7 @@ class Order extends React.Component {
                         <Box pad="medium">
                             <Paragraph>Count</Paragraph>
                             <Select
-                                options={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
+                                options={['1', '2', '3', '4', '5', '6']}
                                 value={this.state.count}
                                 onChange={this.handleChangeItemCount}
                             />

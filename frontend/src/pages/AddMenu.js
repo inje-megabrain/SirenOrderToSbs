@@ -172,7 +172,7 @@ class AddMenu extends React.Component {
                 <Grid columns="small" gap="small">
                     {
                         items && items.map((item) => (
-                            item.isSell?(<Card background="neutral-3" round="small"
+                            item.isSell?(<Card background="light-1" round="small"
                                                key={item.id} pad="medium"
                             >
                                 <CardBody>
@@ -184,7 +184,7 @@ class AddMenu extends React.Component {
                                         stock : {item.stockNumber}
                                     </h3>
                                 </CardBody>
-                                <CardFooter background="neutral-3">
+                                <CardFooter background="light-1">
                                     <Button
                                         icon={<Close color="red" />}
                                         hoverIndicator
