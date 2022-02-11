@@ -4,6 +4,7 @@ import kr.megabrain.sirenorderserver.constant.Role;
 import kr.megabrain.sirenorderserver.dto.MemberDto;
 import kr.megabrain.sirenorderserver.entity.Member;
 import kr.megabrain.sirenorderserver.repository.MemberRepository;
+import kr.megabrain.sirenorderserver.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;

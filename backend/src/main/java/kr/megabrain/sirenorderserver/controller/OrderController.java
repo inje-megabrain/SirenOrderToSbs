@@ -7,6 +7,7 @@ import kr.megabrain.sirenorderserver.dto.OrderHistoryDto;
 import kr.megabrain.sirenorderserver.entity.Item;
 import kr.megabrain.sirenorderserver.entity.Order;
 import kr.megabrain.sirenorderserver.exception.OutOfStockException;
+import kr.megabrain.sirenorderserver.jwt.TokenProvider;
 import kr.megabrain.sirenorderserver.service.ItemService;
 import kr.megabrain.sirenorderserver.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -39,12 +41,13 @@ public class OrderController {
 
     private final OrderService orderService;
     private final WebHookService webHookService;
-    private final AuditorAware auditorAware;
+    private final TokenProvider tokenProvider;
 
     @PostMapping("/order")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public @ResponseBody
-    ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto) {
+    ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto, @PathVariable("jwt") String jwt) {
+        Authentication authentication = tokenProvider.getAuthentication(jwt);
 
         Order order;
         try {
@@ -55,7 +58,7 @@ public class OrderController {
         JSONArray embeds = new JSONArray();
         JSONObject data = new JSONObject();
         data.put("title", "\uD83D\uDCE3 [주문 접수 안내 ]");
-        data.put("description", auditorAware.getCurrentAuditor() + "님의 소중한 주문이 접수되었습니다. \n\n" +
+        data.put("description", authentication.getName() + "님의 소중한 주문이 접수되었습니다. \n\n" +
                 "주문 일시 : " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "\n" +
                 "주문 번호 : " + order.getId() + "\n" +
                 "주문 내역 : " + order.getOrderItems().get(0).getItem().getItemName() + " x " + order.getOrderItems().get(0).getCount() +
@@ -80,7 +83,9 @@ public class OrderController {
     @GetMapping("/order/{orderId}/accept")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
-    ResponseEntity orderAccept(@PathVariable("orderId") String orderId) {
+    ResponseEntity orderAccept(@PathVariable("orderId") String orderId, @PathVariable("jwt") String jwt) {
+        Authentication authentication = tokenProvider.getAuthentication(jwt);
+
         // 주문 수락
         try {
             orderService.setOrderStatus(orderId, OrderStatus.ACCEPT);
@@ -94,7 +99,7 @@ public class OrderController {
         JSONArray embeds = new JSONArray();
         JSONObject data = new JSONObject();
         data.put("title", "\uD83D\uDCE3 [주문 수락 안내 ]");
-        data.put("description", auditorAware.getCurrentAuditor() + "님의 소중한 주문이 수락되었습니다. \n\n" +
+        data.put("description", authentication.getName() + "님의 소중한 주문이 수락되었습니다. \n\n" +
                 "주문 번호 : " + orderId
         );
         embeds.put(data);
@@ -106,7 +111,9 @@ public class OrderController {
     @GetMapping("/order/{orderId}/cancel")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
-    ResponseEntity orderCancel(@PathVariable("orderId") String orderId) {
+    ResponseEntity orderCancel(@PathVariable("orderId") String orderId, @PathVariable("jwt") String jwt) {
+        Authentication authentication = tokenProvider.getAuthentication(jwt);
+
         // 주문 수락
         try {
             orderService.setOrderStatus(orderId, OrderStatus.CANCEL);
@@ -118,7 +125,7 @@ public class OrderController {
         JSONArray embeds = new JSONArray();
         JSONObject data = new JSONObject();
         data.put("title", "\uD83D\uDCE3 [주문 취소 안내 ]");
-        data.put("description", auditorAware.getCurrentAuditor() + "님의 소중한 주문이 취소되었습니다. \n\n" +
+        data.put("description", authentication.getName() + "님의 소중한 주문이 취소되었습니다. \n\n" +
                 "주문 번호 : " + orderId
         );
         embeds.put(data);
