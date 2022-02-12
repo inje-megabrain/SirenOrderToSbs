@@ -12,6 +12,7 @@ class Receipt extends React.Component {
     }
 
     getReceipts = async () => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwtToken')}`;
         await axios.get('/order')
             .then(({ data }) => {
                 this.setState({
@@ -33,6 +34,7 @@ class Receipt extends React.Component {
     };
 
     acceptOrder = (orderId) =>{
+        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwtToken')}`;
         axios.get('/order/'+orderId+'/accept')
             .then(({ data }) => {
                 window.location.reload();
@@ -51,6 +53,7 @@ class Receipt extends React.Component {
     }
 
     closeOrder = (orderId) => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwtToken')}`;
         axios.get('/order/'+orderId+'/cancel')
             .then(({ data }) => {
                 window.location.reload();

@@ -34,6 +34,7 @@ class AddMenu extends React.Component {
     };
 
     getMenuItems = async () => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwtToken')}`;
         await axios.get('/item')
             .then(({ data }) => {
                 this.setState({
@@ -55,6 +56,7 @@ class AddMenu extends React.Component {
     };
 
     newOrder = async () => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwtToken')}`;
         await axios.post('/item/new', {
             itemName:this.menuFrom.itemName,
             price:this.menuFrom.price,
