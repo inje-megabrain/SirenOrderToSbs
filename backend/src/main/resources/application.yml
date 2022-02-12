@@ -18,6 +18,7 @@ spring:
     hibernate:
       default_batch_fetch_size: 1000
       ddl-auto: create-drop
+
     properties:
       hibernate:
         show_sql: true

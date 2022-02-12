@@ -27,6 +27,7 @@ public class MemberService  {
     private final PasswordEncoder passwordEncoder;
 
     public MemberDto singup(MemberDto memberDto) {
+
         if (memberRepository.findByUsername(memberDto.getUsername()) != null) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
@@ -39,5 +40,9 @@ public class MemberService  {
                 .build();
 
         return MemberDto.from(memberRepository.save(member));
+    }
+
+    public MemberDto getMemberInfoByUsername(String username) {
+        return MemberDto.from(memberRepository.findByUsername(username));
     }
 }

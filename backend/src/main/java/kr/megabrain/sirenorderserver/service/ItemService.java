@@ -4,20 +4,25 @@ import kr.megabrain.sirenorderserver.dto.ItemDto;
 import kr.megabrain.sirenorderserver.entity.Item;
 import kr.megabrain.sirenorderserver.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ItemService {
 
-    private final ItemRepository itemRepository;
+    private final ItemRepository itemRepository; // 상수
+
+    public ItemService(ItemRepository itemRepository) {
+        this.itemRepository = itemRepository;
+    }
 
     public Item addItem(ItemDto itemDto) {
         Item item = Item.createItem(itemDto);
         validationDuplicateItem(itemDto.getItemName());
+
 
         itemRepository.save(item);
         return item;

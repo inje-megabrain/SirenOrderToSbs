@@ -13,5 +13,4 @@ public class OrderDto {
     private String ice;
     private String size;
     private int count;
-
 }

@@ -1,7 +1,10 @@
 package kr.megabrain.sirenorderserver.util;
 
+import kr.megabrain.sirenorderserver.entity.Member;
+import kr.megabrain.sirenorderserver.repository.MemberRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +22,7 @@ public class SecurityUtil {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null) {
-            logger.debug("Security Context에 인증 정보가 없습니다.");
+            logger.info("Security Context에 인증 정보가 없습니다.");
             return Optional.empty();
         }
 

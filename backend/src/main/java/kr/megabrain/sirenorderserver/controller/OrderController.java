@@ -2,6 +2,7 @@ package kr.megabrain.sirenorderserver.controller;
 
 import kr.megabrain.sirenorderserver.constant.OrderStatus;
 import kr.megabrain.sirenorderserver.discord.service.WebHookService;
+import kr.megabrain.sirenorderserver.dto.MemberDto;
 import kr.megabrain.sirenorderserver.dto.OrderDto;
 import kr.megabrain.sirenorderserver.dto.OrderHistoryDto;
 import kr.megabrain.sirenorderserver.entity.Item;
@@ -9,7 +10,9 @@ import kr.megabrain.sirenorderserver.entity.Order;
 import kr.megabrain.sirenorderserver.exception.OutOfStockException;
 import kr.megabrain.sirenorderserver.jwt.TokenProvider;
 import kr.megabrain.sirenorderserver.service.ItemService;
+import kr.megabrain.sirenorderserver.service.MemberService;
 import kr.megabrain.sirenorderserver.service.OrderService;
+import kr.megabrain.sirenorderserver.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,41 +46,34 @@ public class OrderController {
     private final OrderService orderService;
     private final WebHookService webHookService;
     private final TokenProvider tokenProvider;
+    private final MemberService memberService;
 
     @PostMapping("/order")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public @ResponseBody
     ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = SecurityUtil.getCurrentUsername().get();
+        MemberDto memberDto = memberService.getMemberInfoByUsername(username);
 
         Order order;
         try {
             order = orderService.order(orderDto, "");
+
+            //webHookService.sendOrderMessage(memberDto, order);
+
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        JSONArray embeds = new JSONArray();
-        JSONObject data = new JSONObject();
-        data.put("title", "\uD83D\uDCE3 [주문 접수 안내 ]");
-        data.put("description", authentication.getName() + "님의 소중한 주문이 접수되었습니다. \n\n" +
-                "주문 일시 : " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "\n" +
-                "주문 번호 : " + order.getId() + "\n" +
-                "주문 내역 : " + order.getOrderItems().get(0).getItem().getItemName() + " x " + order.getOrderItems().get(0).getCount() +
-                " " + order.getOrderItems().get(0).getIce() + " " + order.getOrderItems().get(0).getSize()
-        );
-        data.put("url", "http://shonn.megabrain.kr:9995/receipt");
-        embeds.put(data);
 
-        webHookService.send(embeds);
+
         return new ResponseEntity(order.getId(), HttpStatus.OK);
     }
 
 
     @GetMapping("/order")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public @ResponseBody
-    ResponseEntity getAllOrders() {
-        List<OrderHistoryDto> orderHistoryDtos = orderService.allOrder();
+    public @ResponseBody ResponseEntity getAllOrders() {
+        List<OrderHistoryDto> orderHistoryDtos = orderService.allOrder(); // controller <-> service <-> repository(단방향)
         return new ResponseEntity(orderHistoryDtos, HttpStatus.OK);
     }
 
@@ -85,11 +81,14 @@ public class OrderController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
     ResponseEntity orderAccept(@PathVariable("orderId") String orderId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = SecurityUtil.getCurrentUsername().get();
+        MemberDto member = memberService.getMemberInfoByUsername(username);
 
         // 주문 수락
         try {
             orderService.setOrderStatus(orderId, OrderStatus.ACCEPT);
+
+            webHookService.sendOrderResultMessage("수락", member.getNickname(), orderId);
         } catch (OutOfStockException e) {
             return new ResponseEntity(e.getMessage() , HttpStatus.BAD_REQUEST);
         } catch (IllegalStateException e) {
@@ -97,15 +96,6 @@ public class OrderController {
         } catch (Exception e) {
             return new ResponseEntity("없는 주문입니다.", HttpStatus.BAD_REQUEST);
         }
-        JSONArray embeds = new JSONArray();
-        JSONObject data = new JSONObject();
-        data.put("title", "\uD83D\uDCE3 [주문 수락 안내 ]");
-        data.put("description", authentication.getName() + "님의 소중한 주문이 수락되었습니다. \n\n" +
-                "주문 번호 : " + orderId
-        );
-        embeds.put(data);
-
-        webHookService.send(embeds);
         return new ResponseEntity("수락되었습니다.", HttpStatus.OK);
     }
 
@@ -113,25 +103,18 @@ public class OrderController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
     ResponseEntity orderCancel(@PathVariable("orderId") String orderId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = SecurityUtil.getCurrentUsername().get();
+        MemberDto member = memberService.getMemberInfoByUsername(username);
 
         // 주문 수락
         try {
             orderService.setOrderStatus(orderId, OrderStatus.CANCEL);
+            webHookService.sendOrderResultMessage("취소", member.getNickname(), orderId);
         } catch (IllegalStateException e) {
             return new ResponseEntity("처리된 주문입니다.", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity("없는 주문입니다.", HttpStatus.BAD_REQUEST);
         }
-        JSONArray embeds = new JSONArray();
-        JSONObject data = new JSONObject();
-        data.put("title", "\uD83D\uDCE3 [주문 취소 안내 ]");
-        data.put("description", authentication.getName() + "님의 소중한 주문이 취소되었습니다. \n\n" +
-                "주문 번호 : " + orderId
-        );
-        embeds.put(data);
-
-        webHookService.send(embeds);
 
         return new ResponseEntity("취소되었습니다.", HttpStatus.OK);
     }
