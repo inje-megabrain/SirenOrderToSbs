@@ -59,7 +59,7 @@ public class OrderController {
         try {
             order = orderService.order(orderDto, memberDto.getUsername());
 
-            //webHookService.sendOrderMessage(memberDto, order);
+            webHookService.sendOrderMessage(memberDto, order);
 
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
