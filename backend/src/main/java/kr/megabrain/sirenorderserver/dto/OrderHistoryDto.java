@@ -17,13 +17,14 @@ public class OrderHistoryDto {
 
     private String orderId;
 
+    private String ordererNickname;
+
     private String orderDate;
 
     private OrderStatus orderStatus;
 
     private List<OrderItemDto> orderItemDtos = new ArrayList<>();
 
-    private MemberDto memberDto;
 
     public OrderHistoryDto(){}
 
@@ -32,7 +33,7 @@ public class OrderHistoryDto {
         orderHistoryDto.orderId = order.getId();
         orderHistoryDto.orderDate = order.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         orderHistoryDto.orderStatus = order.getOrderStatus();
-        orderHistoryDto.memberDto = MemberDto.from(order.getMember());
+        orderHistoryDto.ordererNickname = order.getMember().getNickname();
         return orderHistoryDto;
     }
 

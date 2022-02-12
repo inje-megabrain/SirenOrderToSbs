@@ -13,9 +13,9 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Member {
     @Id
-    @Column(name = "user_id")
+    @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long memberId;
 
     @Column(unique = true)
     private String username;

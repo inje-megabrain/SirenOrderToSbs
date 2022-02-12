@@ -57,7 +57,7 @@ public class OrderController {
 
         Order order;
         try {
-            order = orderService.order(orderDto, "");
+            order = orderService.order(orderDto, memberDto.getUsername());
 
             //webHookService.sendOrderMessage(memberDto, order);
 

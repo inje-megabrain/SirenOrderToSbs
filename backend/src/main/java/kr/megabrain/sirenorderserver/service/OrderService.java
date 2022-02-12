@@ -66,8 +66,6 @@ public class OrderService {
         List<Order> orders = orderRepository.findAllOrders();
         List<OrderHistoryDto> orderHistoryDtos = new ArrayList<>();
 
-
-
         for (Order order : orders) {
             Member member = order.getMember();
             OrderHistoryDto orderHistoryDto = OrderHistoryDto.of(order, MemberDto.from(member));
