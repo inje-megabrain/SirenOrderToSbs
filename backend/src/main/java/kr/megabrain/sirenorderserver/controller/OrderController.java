@@ -72,8 +72,9 @@ public class OrderController {
 
     @GetMapping("/order")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public @ResponseBody ResponseEntity getAllOrders() {
-        List<OrderHistoryDto> orderHistoryDtos = orderService.allOrder(); // controller <-> service <-> repository(단방향)
+    public @ResponseBody
+    ResponseEntity getAllOrders() {
+        List<OrderHistoryDto> orderHistoryDtos = orderService.allOrderHitsory(); // controller <-> service <-> repository(단방향)
         return new ResponseEntity(orderHistoryDtos, HttpStatus.OK);
     }
 
@@ -90,7 +91,7 @@ public class OrderController {
 
             webHookService.sendOrderResultMessage("수락", member.getNickname(), orderId);
         } catch (OutOfStockException e) {
-            return new ResponseEntity(e.getMessage() , HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (IllegalStateException e) {
             return new ResponseEntity("처리된 주문입니다.", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -117,5 +118,14 @@ public class OrderController {
         }
 
         return new ResponseEntity("취소되었습니다.", HttpStatus.OK);
+    }
+
+    @GetMapping("/member/order")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public @ResponseBody
+    ResponseEntity getMemberOrder() {
+        String username = SecurityUtil.getCurrentUsername().get();
+        List<OrderHistoryDto> orderHistoryDtos = orderService.memberAllOrderHitory(username); // controller <-> service <-> repository(단방향)
+        return new ResponseEntity(orderHistoryDtos, HttpStatus.OK);
     }
 }

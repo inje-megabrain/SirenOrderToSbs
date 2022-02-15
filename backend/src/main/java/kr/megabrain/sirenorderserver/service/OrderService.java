@@ -62,8 +62,18 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderHistoryDto> allOrder() {
+    public List<OrderHistoryDto> allOrderHitsory() {
         List<Order> orders = orderRepository.findAllOrders();
+        return allOrder(orders);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderHistoryDto> memberAllOrderHitory(String username) {
+        List<Order> orders = orderRepository.findMemberOrders(username);
+        return allOrder(orders);
+    }
+
+    private List<OrderHistoryDto> allOrder(List<Order> orders){
         List<OrderHistoryDto> orderHistoryDtos = new ArrayList<>();
 
         for (Order order : orders) {
