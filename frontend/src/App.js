@@ -24,6 +24,7 @@ import SignUp from "./pages/SignUp";
 import MainPage from "./pages/Main";
 import {loginState, loginUsername, loginNickname, roleOfUser} from "./state";
 import axios from "axios";
+import jwt from "jwt-decode";
 
 function App() {
     return (
@@ -33,7 +34,14 @@ function App() {
                 <Box direction="row" gap={"small"}>
                     <Button href= "/order" icon={<Java />} hoverIndicator />
                     <Button href= "/receipt" icon={<Script />} hoverIndicator />
-                    <Button href= "/addmenu" icon={<Add />} hoverIndicator />
+                    {
+                        localStorage.getItem('jwtToken') !== null ?
+                        jwt(localStorage.getItem('jwtToken')).auth === 'ROLE_ADMIN'?
+                                     <Button
+                                        href="/addmenu"
+                                        icon={<Add />}
+                                        hoverIndicator />:<></>:<></>
+                    }
                 </Box>
                 <Menu icon={<User />} items={localStorage.getItem('jwtToken')
                     ?

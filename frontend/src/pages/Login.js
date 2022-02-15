@@ -28,7 +28,6 @@ class Login extends React.Component {
     }
 
     LoginSubmit = () => {
-
         const data = {
             username: this.state.id,
             password: this.state.pw
@@ -44,10 +43,7 @@ class Login extends React.Component {
             alert('logined!');
             // accessToken을 localStorage, cookie 등에 저장하지 않는다!
             window.location.href = "/";
-
-        }).catch(e => {
-            console.error(e);
-        });
+        }).catch((error) => alert(error.response.data));
     }
 
     render() {

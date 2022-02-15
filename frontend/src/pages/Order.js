@@ -62,12 +62,6 @@ class Order extends React.Component {
         }
     };
 
-    getItemIdBySelectedItem = (e) => {
-        if(e.itemName === this.orderForm.menuName){
-            return true;
-        }
-    };
-
     handleChangeItemCount = (e) => {
         console.log(e.target.value);
         this.orderForm.count = e.target.value;
