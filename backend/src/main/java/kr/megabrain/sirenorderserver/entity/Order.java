@@ -45,7 +45,6 @@ public class Order {
         Order order = new Order();
 
         order.setMember(member);
-
         for (OrderItem orderItem : orderItems) {
             order.addOrderItem(orderItem);
         }

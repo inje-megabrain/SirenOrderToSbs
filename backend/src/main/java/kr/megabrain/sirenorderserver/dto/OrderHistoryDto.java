@@ -1,6 +1,7 @@
 package kr.megabrain.sirenorderserver.dto;
 
 import kr.megabrain.sirenorderserver.constant.OrderStatus;
+import kr.megabrain.sirenorderserver.entity.Member;
 import kr.megabrain.sirenorderserver.entity.Order;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,19 +17,23 @@ public class OrderHistoryDto {
 
     private String orderId;
 
+    private String ordererNickname;
+
     private String orderDate;
 
     private OrderStatus orderStatus;
 
     private List<OrderItemDto> orderItemDtos = new ArrayList<>();
 
+
     public OrderHistoryDto(){}
 
-    public static OrderHistoryDto of(Order order) {
+    public static OrderHistoryDto of(Order order, MemberDto memberDto) {
         OrderHistoryDto orderHistoryDto = new OrderHistoryDto();
         orderHistoryDto.orderId = order.getId();
         orderHistoryDto.orderDate = order.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         orderHistoryDto.orderStatus = order.getOrderStatus();
+        orderHistoryDto.ordererNickname = order.getMember().getNickname();
         return orderHistoryDto;
     }
 

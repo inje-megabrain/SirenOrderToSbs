@@ -4,9 +4,13 @@ package kr.megabrain.sirenorderserver.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import kr.megabrain.sirenorderserver.entity.Member;
+import kr.megabrain.sirenorderserver.repository.MemberRepository;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,6 +37,8 @@ public class TokenProvider implements InitializingBean {
 
     private Key key;
 
+    @Autowired
+    private MemberRepository memberRepository;
 
     public TokenProvider(
             @Value("${jwt.secret}") String secret,
@@ -55,9 +61,13 @@ public class TokenProvider implements InitializingBean {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
+        // memeber 상세 정보 조회
+        Member member = memberRepository.findByUsername(authentication.getName());
+
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
+                .claim("nickname", member.getNickname())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();

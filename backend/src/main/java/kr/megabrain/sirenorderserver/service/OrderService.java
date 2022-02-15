@@ -1,6 +1,7 @@
 package kr.megabrain.sirenorderserver.service;
 
 import kr.megabrain.sirenorderserver.constant.OrderStatus;
+import kr.megabrain.sirenorderserver.dto.MemberDto;
 import kr.megabrain.sirenorderserver.dto.OrderDto;
 import kr.megabrain.sirenorderserver.dto.OrderHistoryDto;
 import kr.megabrain.sirenorderserver.dto.OrderItemDto;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -61,12 +62,23 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderHistoryDto> allOrder() {
+    public List<OrderHistoryDto> allOrderHitsory() {
         List<Order> orders = orderRepository.findAllOrders();
+        return allOrder(orders);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderHistoryDto> memberAllOrderHitory(String username) {
+        List<Order> orders = orderRepository.findMemberOrders(username);
+        return allOrder(orders);
+    }
+
+    private List<OrderHistoryDto> allOrder(List<Order> orders){
         List<OrderHistoryDto> orderHistoryDtos = new ArrayList<>();
 
         for (Order order : orders) {
-            OrderHistoryDto orderHistoryDto = OrderHistoryDto.of(order);
+            Member member = order.getMember();
+            OrderHistoryDto orderHistoryDto = OrderHistoryDto.of(order, MemberDto.from(member));
 
             List<OrderItem> orderItems = order.getOrderItems();
             for (OrderItem orderItem : orderItems) {
