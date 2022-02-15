@@ -17,4 +17,14 @@ const loginNickname = atom({
     default: "unknown user",
 })
 
-export { loginState, loginUsername, loginNickname }
+const roleOfUser = atom({
+    key: "role",
+    default: "ROLE_NONE",
+})
+
+const Token = atom({
+    key: "token",
+    default: "",
+})
+
+export { loginState, loginUsername, loginNickname, roleOfUser, Token }

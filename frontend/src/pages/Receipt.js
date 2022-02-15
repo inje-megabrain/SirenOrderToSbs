@@ -20,7 +20,7 @@ class Receipt extends React.Component {
             URL = '/order';
         else
             URL = '/member/order';
-        console.log(decoded.auth);
+        console.log(decoded);
         await axios.get(URL)
             .then(({ data }) => {
                 this.setState({

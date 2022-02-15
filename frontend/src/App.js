@@ -11,7 +11,7 @@ import {
     atom,
     selector,
     useRecoilState,
-    useRecoilValue
+    useRecoilValue,
 } from "recoil"
 import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -22,7 +22,7 @@ import LoginForm from "./pages/Login";
 import {Java, User, Script, Add} from "grommet-icons";
 import SignUp from "./pages/SignUp";
 import MainPage from "./pages/Main";
-import {loginState, loginUsername, loginNickname} from "./state";
+import {loginState, loginUsername, loginNickname, roleOfUser} from "./state";
 import axios from "axios";
 
 function App() {
@@ -35,11 +35,11 @@ function App() {
                     <Button href= "/receipt" icon={<Script />} hoverIndicator />
                     <Button href= "/addmenu" icon={<Add />} hoverIndicator />
                 </Box>
-                <Menu icon={<User />} items={[localStorage.getItem('jwtToken')?{ label: 'logout', onClick:()=>{
-                    window.location.href="/logout";
-                    localStorage.removeItem('jwtToken');
-                    window.location.href="/";
-                    }}:{ label: 'login', href: '/login'}, { label: 'signup', href: '/signup'}]} />
+                <Menu icon={<User />} items={localStorage.getItem('jwtToken')?[{ label: 'logout', onClick:()=>{
+                        window.location.href="/logout";
+                        localStorage.removeItem('jwtToken');
+                        window.location.href="/";
+                    }}]:[{ label: 'login', href: '/login'}, {label: 'signup', href: '/signup'}]} />
             </Header>
             <Box
                 direction="row"
