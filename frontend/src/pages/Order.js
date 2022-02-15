@@ -1,4 +1,5 @@
-import {Box, Button, Form, Heading, Menu, Paragraph, Select, Grid} from "grommet";
+import {Box, Button, RadioButtonGroup, Heading, Menu, Paragraph, Select, Grid} from "grommet";
+import {Checkmark} from "grommet-icons";
 import React from "react";
 import menusTemplate from "../support/menuDefault";
 import axios from "axios";
@@ -98,22 +99,8 @@ class Order extends React.Component {
 
     handleChangeItem = (e) => {
         console.log(e);
-        e.label = this.orderForm.menuName;
+        this.orderForm.menuId = e.target.value;
     }
-
-    handleChangeItemName = (e) => {
-        console.log(e.value);
-
-        // 상품명, 상품ID 할당
-        this.orderForm.menuName = e.value;
-        this.orderForm.menuId = this.state.menus.filter(this.getItemIdBySelectedItem).at(0).id;
-
-        this.setState({
-            menuName: this.orderForm.menuName
-        })
-        console.log(this.orderForm);
-        //console.log(this.state.menus.filter(this.getItemIdBySelectedItem));
-    };
 
     componentDidMount() {
         this.getMenus().then(r => console.log(r));
@@ -127,11 +114,7 @@ class Order extends React.Component {
                 .map((menu) => (
                     {
                         label: menu.itemName,
-                        onClick: () => {
-                            this.orderForm.menuName = menu.itemName;
-                            this.orderForm.menuId = menu.id;
-
-                        }
+                        value: menu.id
                     }
                 ))
 
@@ -146,10 +129,11 @@ class Order extends React.Component {
                                 <span className="loader__text">Loading...</span>
                             </div>
                         ):(
-                            <Menu
+                            <RadioButtonGroup
                                 label={this.orderForm.menuName}
-                                items={options}
-                                onChange={this.handleChangeItem}/>
+                                options={options}
+                                onChange={this.handleChangeItem}
+                                name="Menus"/>
                         )}
                     </Box>
                     <Box pad="medium">
@@ -176,11 +160,9 @@ class Order extends React.Component {
                             onChange={this.handleChangeItemCount}
                         />
                     </Box>
+
                 </Grid>
-                <br/>
-                <Box direction="row" gap="medium">
-                    <Button type="submit" onClick={this.newOrder} primary label="order now!"/>
-                </Box>
+                <Button icon={<Checkmark />} type="submit" size = "large" onClick={this.newOrder} label="order now!"/>
             </>
         )
     };
