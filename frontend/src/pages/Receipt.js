@@ -4,6 +4,7 @@ import React from "react";
 import axios from "axios";
 import ReceiptsTemplate from "../support/receiptDefault";
 import { Paragraph } from "grommet";
+import jwt from 'jwt-decode';
 
 class Receipt extends React.Component {
 
@@ -13,7 +14,14 @@ class Receipt extends React.Component {
 
     getReceipts = async () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwtToken')}`;
-        await axios.get('/order')
+        const decoded = jwt(localStorage.getItem('jwtToken'));
+        let URL;
+        if (decoded.auth==='ROLE_ADMIN')
+            URL = '/order';
+        else
+            URL = '/member/order';
+        console.log(decoded.auth);
+        await axios.get(URL)
             .then(({ data }) => {
                 this.setState({
                     loading: true,
