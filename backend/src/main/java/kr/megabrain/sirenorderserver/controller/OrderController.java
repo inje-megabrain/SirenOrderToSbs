@@ -41,6 +41,7 @@ import java.util.function.BiConsumer;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/api/order")
 public class OrderController {
 
     private final OrderService orderService;
@@ -48,7 +49,7 @@ public class OrderController {
     private final TokenProvider tokenProvider;
     private final MemberService memberService;
 
-    @PostMapping("/order")
+    @PostMapping("")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public @ResponseBody
     ResponseEntity newOrder(@Valid @RequestBody OrderDto orderDto) {
@@ -70,7 +71,7 @@ public class OrderController {
     }
 
 
-    @GetMapping("/order")
+    @GetMapping("")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
     ResponseEntity getAllOrders() {
@@ -78,7 +79,7 @@ public class OrderController {
         return new ResponseEntity(orderHistoryDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/order/{orderId}/accept")
+    @GetMapping("/{orderId}/accept")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
     ResponseEntity orderAccept(@PathVariable("orderId") String orderId) {
@@ -100,7 +101,7 @@ public class OrderController {
         return new ResponseEntity("수락되었습니다.", HttpStatus.OK);
     }
 
-    @GetMapping("/order/{orderId}/cancel")
+    @GetMapping("/{orderId}/cancel")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
     ResponseEntity orderCancel(@PathVariable("orderId") String orderId) {
@@ -120,7 +121,7 @@ public class OrderController {
         return new ResponseEntity("취소되었습니다.", HttpStatus.OK);
     }
 
-    @GetMapping("/member/order")
+    @GetMapping("/myorder")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public @ResponseBody
     ResponseEntity getMemberOrder() {

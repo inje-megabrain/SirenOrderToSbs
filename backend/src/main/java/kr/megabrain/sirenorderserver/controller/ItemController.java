@@ -15,13 +15,17 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequiredArgsConstructor
+@RequestMapping("/api/item")
 public class ItemController {
 
-    @Autowired
     private final ItemService itemService;
 
-    @PostMapping("/item/new")
+    @Autowired
+    public ItemController(ItemService itemService) {
+        this.itemService = itemService;
+    }
+
+    @PostMapping("/new")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody
     ResponseEntity addItem(@Valid @RequestBody ItemDto itemDto) {
@@ -34,7 +38,7 @@ public class ItemController {
         return new ResponseEntity(savedItem, HttpStatus.OK);
     }
 
-    @GetMapping("/item")
+    @GetMapping("")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity getAllItem() {
 
@@ -43,7 +47,7 @@ public class ItemController {
         return new ResponseEntity(items, HttpStatus.OK);
     }
 
-    @DeleteMapping("/item/{itemId}")
+    @DeleteMapping("/{itemId}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public @ResponseBody ResponseEntity deleteItem(@PathVariable("itemId") Long itemId) {
         try {
