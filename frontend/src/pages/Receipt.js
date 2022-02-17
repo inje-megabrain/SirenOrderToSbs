@@ -4,16 +4,24 @@ import React from "react";
 import axios from "axios";
 import ReceiptsTemplate from "../support/receiptDefault";
 import { Paragraph } from "grommet";
+import jwt from 'jwt-decode';
 
 class Receipt extends React.Component {
 
     state = {
-        receipts: ReceiptsTemplate,
+        receipts: '',
     }
 
     getReceipts = async () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwtToken')}`;
-        await axios.get('/order')
+        const decoded = jwt(localStorage.getItem('jwtToken'));
+        let URL;
+        if (decoded.auth==='ROLE_ADMIN')
+            URL = '/order';
+        else
+            URL = '/member/order';
+        console.log(decoded);
+        await axios.get(URL)
             .then(({ data }) => {
                 this.setState({
                     loading: true,
@@ -83,7 +91,7 @@ class Receipt extends React.Component {
         return (
             <>
             <Heading>Receipt 🧾</Heading>
-            <Grid columns="small" gap="small">{
+                <Grid columns="small" gap="small">{
                 receipts && receipts.map((receipt)=>(
                     <>
                     <Card
@@ -94,10 +102,10 @@ class Receipt extends React.Component {
                           key={receipt.orderId}
                     >
                         <CardBody height="small" pad="xsmall">
-                            <Heading level="1" color={receipt.orderStatus !== 'ORDER'?'status-disabled':'status-ok'}>{receipt.orderStatus }</Heading>
+                            <Heading level="1" margin="none" color={receipt.orderStatus !== 'ORDER'?'status-disabled':'status-ok'}>{receipt.orderStatus }</Heading>
                             {
                              receipt.orderItemDtos.map((order) => (
-                                 <>
+                                 <><Heading level="3" color="dark-2">{receipt.ordererNickname}</Heading>
                                     <h2>
                                         {order.count} {order.ice} {order.size} {order.itemName}<br />
                                         ${order.orderPrice * order.count}<br/>

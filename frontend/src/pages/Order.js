@@ -1,4 +1,5 @@
-import {Box, Button, Form, Heading, Paragraph, Select, TextInput} from "grommet";
+import {Box, Button, RadioButtonGroup, Heading, Menu, Paragraph, Select, Grid} from "grommet";
+import {Checkmark} from "grommet-icons";
 import React from "react";
 import menusTemplate from "../support/menuDefault";
 import axios from "axios";
@@ -12,18 +13,17 @@ class Order extends React.Component {
         count : '1',
         name : 'shonn',
         menuId : '1',
-        menuName : ''
+        menuName : 'americano'
     };
 
     state = {
         isLoading: true,
-        menus: menusTemplate,
+        menus: '',
         ice : 'ice',
         size: 'tall',
         menuName : 'americano',
         count : '1',
     };
-
 
     getMenus = async () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwtToken')}`;
@@ -33,7 +33,6 @@ class Order extends React.Component {
                     loading: true,
                     menus: data
                 });
-                console.log(data.id);
             })
             .catch(e => {  // API 호출이 실패한 경우
                 console.error(e);  // 에러표시
@@ -41,9 +40,6 @@ class Order extends React.Component {
                     loading: false
                 });
             })
-            .finally(e => {
-
-            });
         this.setState({isLoading: false});
     };
 
@@ -63,12 +59,6 @@ class Order extends React.Component {
                 .catch((error) => alert(error.response.data))
         }else{
             alert('count cannot be nagative');
-        }
-    };
-
-    getItemIdBySelectedItem = (e) => {
-        if(e.itemName === this.orderForm.menuName){
-            return true;
         }
     };
 
@@ -101,94 +91,72 @@ class Order extends React.Component {
         console.log(this.orderForm);
     }
 
-    handleChangeItemName = (e) => {
-        console.log(e.value);
-
-        // 상품명, 상품ID 할당
-        this.orderForm.menuName = e.value;
-        this.orderForm.menuId = this.state.menus.filter(this.getItemIdBySelectedItem).at(0).id;
-
-        this.setState({
-            menuName: this.orderForm.menuName
-        })
-        console.log(this.orderForm);
-        //console.log(this.state.menus.filter(this.getItemIdBySelectedItem));
-    };
+    handleChangeItem = (e) => {
+        console.log(e);
+        this.orderForm.menuId = e.target.value;
+    }
 
     componentDidMount() {
-        // setTimeout(() => {
-        //     this.setState({isLoading:false});
-        // },6000);
         this.getMenus().then(r => console.log(r));
     }
 
     render() {
         const {isLoading, menus } = this.state;
+        const options =
+            menus && menus
+                .filter(menu => menu.isSell === true)
+                .map((menu) => (
+                    {
+                        label: menu.itemName,
+                        value: menu.id
+                    }
+                ))
+
         return (
             <>
                 <Heading>Order Coffee ☕️</Heading>
-                <Form
-                    onChange={({value}) => {
-                        console.log("Submit: ", value)
-                    }}
-                >
-                    <Box
-                        direction="row"
-                        border={{color: 'brand', size: 'small'}}
-                        pad="small"
-                    >
-                        <Box pad="medium">
-                            <Paragraph>Menu</Paragraph>
-                            {isLoading?(
-                                <div className="loader">
-                                    <span className="loader__text">Loading...</span>
-                                </div>
-                            ):(
-                                <Select
-                                    className="menus"
-                                    placeholder={this.state.menuName}
-                                    //placeholder=""
-                                    onChange={this.handleChangeItemName}
-                                    options={
-                                        menus && menus
-                                            .filter(menu => menu.isSell == true)
-                                            .map((menu) => (
-                                            menu.itemName
-                                        ))
-                                    }
-                                />
-                            )}
-                        </Box>
-                        <Box pad="medium">
-                            <Paragraph>ice or hot</Paragraph>
-                            <Select
-                                options={['ice', 'hot']}
-                                value={this.state.ice}
-                                onChange={this.handleChangeItemIce}
-                            />
-                        </Box>
-                        <Box pad="medium">
-                            <Paragraph>Size</Paragraph>
-                            <Select
-                                options={['tall', 'grande', 'venti']}
-                                value={this.state.size}
-                                onChange={this.handleChangeItemSize}
-                            />
-                        </Box>
-                        <Box pad="medium">
-                            <Paragraph>Count</Paragraph>
-                            <Select
-                                options={['1', '2', '3', '4', '5', '6']}
-                                value={this.state.count}
-                                onChange={this.handleChangeItemCount}
-                            />
-                        </Box>
+                <Grid columns="small" gap="small">
+                    <Box pad="medium">
+                        <Paragraph>Menu</Paragraph>
+                        {isLoading?(
+                            <div className="loader">
+                                <span className="loader__text">Loading...</span>
+                            </div>
+                        ):(
+                            <RadioButtonGroup
+                                label={this.orderForm.menuName}
+                                options={options}
+                                onChange={this.handleChangeItem}
+                                name="Menus"/>
+                        )}
                     </Box>
-                    <br/>
-                    <Box direction="row" gap="medium">
-                        <Button type="submit" onClick={this.newOrder} primary label="order now!"/>
+                    <Box pad="medium">
+                        <Paragraph>ice or hot</Paragraph>
+                        <Select
+                            options={['ice', 'hot']}
+                            value={this.state.ice}
+                            onChange={this.handleChangeItemIce}
+                        />
                     </Box>
-                </Form>
+                    <Box pad="medium">
+                        <Paragraph>Size</Paragraph>
+                        <Select
+                            options={['tall', 'grande', 'venti']}
+                            value={this.state.size}
+                            onChange={this.handleChangeItemSize}
+                        />
+                    </Box>
+                    <Box pad="medium">
+                        <Paragraph>Count</Paragraph>
+                        <Select
+                            options={['1', '2', '3', '4', '5', '6']}
+                            value={this.state.count}
+                            onChange={this.handleChangeItemCount}
+                        />
+                    </Box>
+
+                </Grid>
+                <Button icon={<Checkmark />} type="submit" size = "large" onClick={this.newOrder} label="order now!"/>
             </>
         )
     };
