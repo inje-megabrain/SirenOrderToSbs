@@ -1,8 +1,6 @@
 package kr.megabrain.sirenorderserver.discord.service;
 
 import kr.megabrain.sirenorderserver.dto.MemberDto;
-import kr.megabrain.sirenorderserver.dto.OrderDto;
-import kr.megabrain.sirenorderserver.entity.Member;
 import kr.megabrain.sirenorderserver.entity.Order;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -59,7 +56,7 @@ public class WebHookService {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> entity = new HttpEntity<>(body.toString(), headers);
-        restTemplate.postForObject(url, entity, String.class);
+        restTemplate.postForObject(url, entity, String.class); // POST 요청
 
     }
     private String quote(String string) {
